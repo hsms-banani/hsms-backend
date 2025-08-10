@@ -27,9 +27,9 @@ BASE_URL = os.getenv('DJANGO_BASE_URL', 'http://localhost:8000')
 SECRET_KEY = 'django-insecure-^%%8=ek8a5k$u_@=ime%87a+#m#$=*5_%37algc&gsbjckb0h1'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hsms-banani.org', 'api.hsms-banani.org']
 
 
 # Application definition
@@ -77,7 +77,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # Your Next.js development server
     "http://127.0.0.1:3000",
-    # "https://yourproductiondomain.com",  # Add your production domain
+    "https://hsms-banani.org",  # Add your production domain
 ]
 
 
@@ -432,6 +432,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://hsms-banani.org",
 ]
 
 # For debugging API responses in development
