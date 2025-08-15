@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-^%%8=ek8a5k$u_@=ime%87a+#m#$=*5_%37algc&gsbjckb0h1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['hsms-banani.org', 'api.hsms-banani.org']
+ALLOWED_HOSTS = ['hsms-banani.org', 'www.hsms-banani.org', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -140,7 +140,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Site URL for media file serving
-SITE_URL = 'http://localhost:8000'
+SITE_URL = 'https://hsms-banani.org'
 
 # File upload settings
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
