@@ -1,0 +1,244 @@
+<!-- Rector's Welcome Page - Fixed Version -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page.title }} - Holy Spirit Major Seminary{% endblock %}
+
+{% block meta_description %}{{ page.meta_description|default:page.content|striptags|truncatewords:20 }}{% endblock %}
+
+{% block extra_css %}
+<!-- Consistent Styles CSS -->
+<link rel="stylesheet" href="{% static 'css/consistent-styles.css' %}">
+
+<!-- Rich text content styling - scoped to content area only -->
+<style>
+/* Rich text content styling - SCOPED to prevent header/footer interference */
+.page-content-area .rich-content {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.page-content-area .rich-content h1,
+.page-content-area .rich-content h2,
+.page-content-area .rich-content h3,
+.page-content-area .rich-content h4,
+.page-content-area .rich-content h5,
+.page-content-area .rich-content h6 {
+    font-family: 'Playfair Display', serif;
+    color: #1f2937;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.page-content-area .rich-content h1 {
+    font-size: 2.5rem;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 0.5rem;
+}
+
+.page-content-area .rich-content h2 {
+    font-size: 2rem;
+    color: #4f46e5;
+    border-left: 4px solid #667eea;
+    padding-left: 1rem;
+}
+
+.page-content-area .rich-content h3 {
+    font-size: 1.5rem;
+    color: #6366f1;
+}
+
+.page-content-area .rich-content p {
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    font-size: 1.1rem;
+}
+
+.page-content-area .rich-content ul,
+.page-content-area .rich-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.page-content-area .rich-content li {
+    margin-bottom: 0.5rem;
+}
+
+.page-content-area .rich-content blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #4b5563;
+    background-color: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
+}
+
+.page-content-area .rich-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+}
+
+.page-content-area .rich-content strong {
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.page-content-area .rich-content em {
+    font-style: italic;
+    color: #4b5563;
+}
+
+/* Ensure page hero doesn't interfere with header */
+.page-hero {
+    margin-top: 0 !important;
+}
+
+/* Scope all page-specific styles to prevent header/footer interference */
+.page-content-wrapper {
+    isolation: isolate;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-content-wrapper">
+    <!-- Rector's Welcome Special Layout -->
+    <section class="bg-gray-100 py-20 page-hero">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h1 class="text-5xl font-bold font-serif mb-4 text-gray-800">{{ page.title }}</h1>
+                <nav class="text-lg text-gray-600">
+                    <a href="{% url 'home' %}" class="hover:text-blue-600 transition-colors">Home</a>
+                    <span class="mx-3">/</span>
+                    <a href="{% url 'about_seminary' %}" class="hover:text-blue-600 transition-colors">Our Seminary</a>
+                    <span class="mx-3">/</span>
+                    <span>{{ page.title }}</span>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white page-content-area">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex flex-col md:flex-row gap-8 md:gap-12">
+                    <!-- Rector's Image -->
+                    <div class="md:w-1/3 text-center">
+                        {% if rector.photo %}
+                        <img src="{{ rector.photo.url }}" alt="{{ rector.name }}" 
+                             class="rounded-lg shadow-lg w-full h-auto object-cover">
+                        {% else %}
+                        <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user text-6xl text-gray-400"></i>
+                        </div>
+                        {% endif %}
+                        <h3 class="text-2xl font-bold mt-6 mb-2 text-gray-800">{{ rector.name }}</h3>
+                        <p class="text-gray-600">{{ rector.title }}</p>
+                    </div>
+                    
+                    <!-- Welcome Message with Rich Content -->
+                    <div class="md:w-2/3">
+                        <div class="rich-content">
+                            {{ page.content|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Pages or Call to Action -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold font-serif text-gray-800 mb-8">Explore More</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <a href="{% url 'about_seminary' %}" 
+                           class="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow hover-lift">
+                            <div class="w-12 h-12 bg-gradient-primary text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                                <i class="fas fa-church"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-gray-800">About Seminary</h3>
+                            <p class="text-gray-600 text-sm">Learn about our history, mission, and vision</p>
+                        </a>
+                        
+                        <a href="{% url 'faculty_list' %}" 
+                           class="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow hover-lift">
+                            <div class="w-12 h-12 bg-gradient-secondary text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-gray-800">Our Faculty</h3>
+                            <p class="text-gray-600 text-sm">Meet our dedicated teachers and mentors</p>
+                        </a>
+                        
+                        <a href="{% url 'publications' %}" 
+                           class="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow hover-lift">
+                            <div class="w-12 h-12 bg-gradient-tertiary text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2 text-gray-800">Publications</h3>
+                            <p class="text-gray-600 text-sm">Explore our academic publications and research</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scrolling for anchor links within rich content
+document.addEventListener('DOMContentLoaded', function() {
+    const richContent = document.querySelector('.rich-content');
+    if (richContent) {
+        const links = richContent.querySelectorAll('a[href^="#"]');
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+    
+    // Ensure consistent header/footer styling after page load
+    setTimeout(() => {
+        const topHeader = document.querySelector('.top-header');
+        const mainHeader = document.querySelector('.main-header');
+        const mainNav = document.querySelector('.main-nav');
+        const mainFooter = document.querySelector('.main-footer');
+        
+        if (topHeader && !topHeader.style.background.includes('gradient')) {
+            topHeader.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; color: white !important;';
+        }
+        
+        if (mainHeader && !mainHeader.style.backgroundColor) {
+            mainHeader.style.cssText = 'background-color: white !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;';
+        }
+        
+        if (mainNav && mainNav.style.backgroundColor !== 'rgb(55, 65, 81)') {
+            mainNav.style.cssText = 'background-color: #374151 !important; color: white !important;';
+        }
+        
+        if (mainFooter && mainFooter.style.backgroundColor !== 'rgb(17, 24, 39)') {
+            mainFooter.style.cssText = 'background-color: #111827 !important; color: white !important;';
+        }
+    }, 100);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,219 @@
+<!-- seminary/publication_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ publication.title }} - Publications - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Publication Header -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Breadcrumb -->
+            <nav class="text-sm text-gray-600 mb-8">
+                <a href="{% url 'home' %}" class="hover:text-blue-600">Home</a>
+                <span class="mx-2">/</span>
+                <a href="{% url 'publications' %}" class="hover:text-blue-600">Publications</a>
+                <span class="mx-2">/</span>
+                <span>{{ publication.title|truncatewords:5 }}</span>
+            </nav>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+                    <!-- Publication Info -->
+                    <div class="mb-8">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full">
+                                {{ publication.get_publication_type_display }}
+                            </span>
+                            <span class="text-gray-500 text-sm">{{ publication.publication_date|date:"M Y" }}</span>
+                        </div>
+                        <h1 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ publication.title }}</h1>
+                        <p class="text-lg text-gray-600 mb-4">By {{ publication.author }}</p>
+                        {% if publication.co_authors %}
+                        <p class="text-gray-500">Co-authors: {{ publication.co_authors }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Publication Details -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Publication Details</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            {% if publication.volume %}
+                            <div>
+                                <span class="font-medium">Volume:</span> {{ publication.volume }}
+                            </div>
+                            {% endif %}
+                            {% if publication.issue %}
+                            <div>
+                                <span class="font-medium">Issue:</span> {{ publication.issue }}
+                            </div>
+                            {% endif %}
+                            {% if publication.page_numbers %}
+                            <div>
+                                <span class="font-medium">Pages:</span> {{ publication.page_numbers }}
+                            </div>
+                            {% endif %}
+                            <div>
+                                <span class="font-medium">Downloads:</span> {{ publication.download_count }}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if publication.pdf_file %}
+                    <!-- PDF Preview -->
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold font-serif mb-4">Preview PDF</h3>
+                        <div class="border rounded-lg overflow-hidden shadow-lg">
+                            <iframe src="{{ publication.pdf_file.url }}" 
+                                    class="w-full h-[600px]" 
+                                    style="border: none;" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <a href="{{ publication.pdf_file.url }}" target="_blank" 
+                        class="inline-block mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            Open Full Screen
+                        </a>
+                    </div>
+                    {% endif %}
+
+            
+                    
+                    <!-- Abstract -->
+                    {% if publication.abstract %}
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold font-serif mb-4">Abstract</h3>
+                        <div class="prose prose-lg max-w-none">
+                            {{ publication.abstract|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Full Content -->
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold font-serif mb-4">Full Text</h3>
+                        <div class="prose prose-lg max-w-none">
+                            {{ publication.content|linebreaks }}
+                        </div>
+                    </div>
+                    
+                    <!-- Keywords -->
+                    {% if keywords %}
+                    <div class="mb-8">
+                        <h3 class="text-lg font-semibold mb-4">Keywords</h3>
+                        <div class="flex flex-wrap gap-2">
+                            {% for keyword in keywords %}
+                            <span class="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">{{ keyword }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <!-- Cover Image -->
+                    {% if publication.cover_image %}
+                    <div class="mb-8">
+                        <img src="{{ publication.cover_image.url }}" 
+                             alt="{{ publication.title }}" 
+                             class="w-full rounded-lg shadow-lg">
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Download Section -->
+                    {% if publication.pdf_file %}
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-8">
+                        <h4 class="text-lg font-semibold mb-4">Download PDF</h4>
+                        <a href="{% url 'download_publication' publication.slug %}" 
+                           class="block w-full px-6 py-3 bg-green-600 text-white text-center rounded-lg font-medium hover:bg-green-700 transition-colors">
+                            <i class="fas fa-download mr-2"></i>
+                            Download PDF
+                        </a>
+                        <p class="text-green-700 text-sm mt-2">{{ publication.download_count }} downloads</p>
+                    </div>
+                    {% endif %}
+
+                    
+                    <!-- Share Section -->
+                    <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                        <h4 class="text-lg font-semibold mb-4">Share This Publication</h4>
+                        <div class="flex space-x-3">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                               target="_blank"
+                               class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ publication.title }}" 
+                               target="_blank"
+                               class="w-10 h-10 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <button onclick="copyToClipboard('{{ request.build_absolute_uri }}')"
+                                    class="w-10 h-10 bg-gray-600 text-white rounded-full flex items-center justify-center hover:bg-gray-700">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Citation -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <h4 class="text-lg font-semibold mb-4">Citation</h4>
+                        <div class="text-sm text-gray-700 bg-white p-3 rounded border">
+                            {{ publication.author }}. ({{ publication.publication_date.year }}). {{ publication.title }}. 
+                            <em>{{ publication.get_publication_type_display }}</em>{% if publication.volume %}, {{ publication.volume }}{% endif %}{% if publication.issue %}({{ publication.issue }}){% endif %}{% if publication.page_numbers %}, {{ publication.page_numbers }}{% endif %}.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Publications -->
+{% if related_publications %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold font-serif text-center mb-12">Related Publications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for related in related_publications %}
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center space-x-2 mb-3">
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                            {{ related.get_publication_type_display }}
+                        </span>
+                        <span class="text-gray-500 text-xs">{{ related.publication_date|date:"Y" }}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">{{ related.title|truncatewords:8 }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">By {{ related.author }}</p>
+                    <a href="{{ related.get_absolute_url }}" 
+                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        Read More <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+        toast.textContent = 'Link copied to clipboard!';
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    });
+}
+</script>
+{% endblock %}

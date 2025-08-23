@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gallery - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-primary text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold font-serif mb-4 animate-fade-in-up">Gallery</h1>
+            <nav class="text-lg opacity-90 animate-fade-in-up" style="animation-delay: 0.2s;">
+                <a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors">Home</a>
+                <span class="mx-3">/</span>
+                <span>Gallery</span>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Content -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <!-- Gallery Type Filter -->
+        <div class="flex justify-center mb-12">
+            <div class="flex space-x-2 bg-gray-200 p-2 rounded-full">
+                {% for type_id, type_name in gallery_types %}
+                <a href="?type={{ type_id }}" 
+                   class="px-6 py-2 rounded-full text-sm font-semibold transition-colors "
+                   :class="{ 'bg-white text-blue-600 shadow': '{{ selected_type }}' === '{{ type_id }}', 'text-gray-600 hover:bg-gray-300': '{{ selected_type }}' !== '{{ type_id }}' }">
+                    {{ type_name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for gallery in galleries %}
+            <a href="{{ gallery.get_absolute_url }}" class="block bg-white rounded-lg shadow-md overflow-hidden hover-lift group">
+                {% if gallery.cover_image %}
+                <div class="relative h-48">
+                    <img src="{{ gallery.cover_image.url }}" alt="{{ gallery.title }}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black/20"></div>
+                </div>
+                {% else %}
+                <div class="relative h-48 bg-gradient-primary flex items-center justify-center">
+                    <i class="fas fa-images text-white text-4xl"></i>
+                </div>
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2 text-gray-800 group-hover:text-blue-600 transition-colors">{{ gallery.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-3">{{ gallery.created_at|date:"M d, Y" }}</p>
+                    <p class="text-gray-700 text-sm line-clamp-2">{{ gallery.description|truncatewords:15 }}</p>
+                </div>
+            </a>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <i class="fas fa-images text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-2xl font-semibold text-gray-700">No Galleries Found</h3>
+                <p class="text-gray-500 mt-2">There are currently no galleries of this type. Please check back later.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

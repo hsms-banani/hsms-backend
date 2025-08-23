@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results for "{{ query }}"{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Search Results for "{{ query }}"</h1>
+    {% include 'seminary/partials/search_results.html' %}
+</div>
+{% endblock %}

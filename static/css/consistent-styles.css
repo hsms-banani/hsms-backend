@@ -1,0 +1,258 @@
+/* static/css/consistent-styles.css */
+/* Force consistent styling across all pages - Override any conflicting styles */
+
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box !important;
+}
+
+body {
+    font-family: 'Inter', sans-serif !important;
+    line-height: 1.6 !important;
+    color: #374151 !important;
+    background-color: #f9fafb !important;
+}
+
+/* Header Components - Force Consistency */
+.top-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.main-header {
+    background-color: white !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+}
+
+.main-nav {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+/* Navigation Links - Force Consistency */
+.nav-link {
+    color: white !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+}
+
+.nav-link:hover,
+.nav-link:focus {
+    background-color: rgba(55, 65, 81, 0.8) !important;
+    color: white !important;
+}
+
+/* Dropdown Styles - Force Consistency */
+.dropdown-menu {
+    background: white !important;
+    color: #374151 !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 0 !important;
+    min-width: 16rem !important;
+    z-index: 1000 !important;
+}
+
+.dropdown-menu a {
+    display: block !important;
+    padding: 0.5rem 1rem !important;
+    color: #374151 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a:focus {
+    background-color: #f3f4f6 !important;
+    color: #1f2937 !important;
+}
+
+/* Mobile Menu - Force Consistency */
+.mobile-menu-container {
+    background-color: #374151 !important;
+    color: white !important;
+}
+
+.mobile-menu-container a {
+    color: white !important;
+    text-decoration: none !important;
+}
+
+.mobile-menu-container a:hover {
+    background-color: rgba(55, 65, 81, 0.8) !important;
+}
+
+/* Footer - Force Consistency */
+.main-footer {
+    background-color: #111827 !important;
+    color: white !important;
+    margin-top: 4rem !important;
+}
+
+.main-footer * {
+    color: inherit !important;
+}
+
+.main-footer h3,
+.main-footer h4 {
+    color: #f9fafb !important;
+    font-weight: 600 !important;
+}
+
+.main-footer a {
+    color: #d1d5db !important;
+    text-decoration: none !important;
+    transition: color 0.3s ease !important;
+}
+
+.main-footer a:hover {
+    color: white !important;
+}
+
+/* Gradient Backgrounds - Force Consistency */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+.bg-gradient-secondary {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+    color: white !important;
+}
+
+.bg-gradient-tertiary {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    color: white !important;
+}
+
+/* Back to Top Button */
+#backToTop {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+/* Prevent Rich Content from Overriding Header/Footer Styles */
+.rich-content h1,
+.rich-content h2,
+.rich-content h3,
+.rich-content h4,
+.rich-content h5,
+.rich-content h6 {
+    color: #1f2937 !important;
+}
+
+/* Ensure these don't affect header/footer */
+.content-wrapper .rich-content * {
+    /* Scope rich content styles to content area only */
+}
+
+/* Override any TinyMCE content styles that might affect header/footer */
+.tinymce-content h1,
+.tinymce-content h2,
+.tinymce-content h3,
+.tinymce-content h4,
+.tinymce-content h5,
+.tinymce-content h6 {
+    color: #1f2937 !important;
+}
+
+/* Prevent any global style bleeding */
+.content-wrapper {
+    isolation: isolate !important;
+}
+
+/* Force specific header elements to maintain their styling */
+.top-header .container,
+.main-header .container,
+.main-nav .container {
+    background: transparent !important;
+}
+
+.main-header h1 {
+    color: #1f2937 !important;
+    font-family: 'Playfair Display', serif !important;
+}
+
+.main-header p {
+    color: #6b7280 !important;
+}
+
+/* Ensure logo containers maintain their styling */
+.main-header .flex-shrink-0,
+.main-footer .flex-shrink-0 {
+    background: transparent !important;
+}
+
+/* Font consistency */
+.font-serif {
+    font-family: 'Playfair Display', serif !important;
+}
+
+/* Animation consistency */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out !important;
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out !important;
+}
+
+/* Hover effects consistency */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+
+/* Ensure search input maintains its styling */
+.main-header input[type="text"] {
+    background-color: white !important;
+    color: #374151 !important;
+    border: 1px solid #d1d5db !important;
+}
+
+/* Mobile hamburger button */
+.main-header button i {
+    color: #374151 !important;
+}
+
+/* Ensure consistent spacing and layout */
+.container {
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+}
+
+/* Media queries for responsive consistency */
+@media (min-width: 768px) {
+    .container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding-left: 2rem !important;
+        padding-right: 2rem !important;
+    }
+}

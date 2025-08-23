@@ -1,0 +1,241 @@
+<!-- templates/seminary/committees.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ page_title }} - {{ block.super }}{% endblock %}
+
+{% block meta_description %}Seminary Committees at Holy Spirit Major Seminary - Learn about our various committees managing different aspects of seminary life and administration.{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative bg-gradient-primary text-white py-16">
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center animate-fade-in-up">
+            <h1 class="text-3xl md:text-5xl font-bold font-serif mb-4">{{ page_title }}</h1>
+            <p class="text-xl text-blue-100 max-w-3xl mx-auto">
+                Dedicated teams working together for the betterment of seminary life and administration
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Breadcrumb Navigation -->
+<div class="bg-gray-100 py-4">
+    <div class="container mx-auto px-4">
+        <nav class="text-sm">
+            <ol class="flex items-center space-x-2">
+                {% for breadcrumb_title, breadcrumb_url in breadcrumbs %}
+                <li>
+                    {% if breadcrumb_url %}
+                        <a href="{% url breadcrumb_url %}" class="text-blue-600 hover:text-blue-800">{{ breadcrumb_title }}</a>
+                    {% else %}
+                        <span class="text-gray-600">{{ breadcrumb_title }}</span>
+                    {% endif %}
+                </li>
+                {% if not forloop.last %}
+                    <li><i class="fas fa-chevron-right text-gray-400 mx-2"></i></li>
+                {% endif %}
+                {% endfor %}
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="py-12">
+    <div class="container mx-auto px-4">
+        <!-- Committee Type Filter -->
+        <div class="mb-8">
+            <div class="flex flex-wrap justify-center gap-3">
+                <a href="?type=" 
+                   class="px-6 py-2 rounded-full border-2 transition-all duration-300 {% if not selected_type %}bg-gradient-primary text-white border-purple-600{% else %}border-gray-300 text-gray-600 hover:border-purple-400{% endif %}">
+                    All Committees
+                </a>
+                {% for type_value, type_label in committee_types %}
+                <a href="?type={{ type_value }}" 
+                   class="px-6 py-2 rounded-full border-2 transition-all duration-300 {% if selected_type == type_value %}bg-gradient-primary text-white border-purple-600{% else %}border-gray-300 text-gray-600 hover:border-purple-400{% endif %}">
+                    {{ type_label }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Committees Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for committee in committees %}
+            <div class="bg-white rounded-xl shadow-lg hover-lift overflow-hidden">
+                <!-- Committee Header -->
+                <div class="bg-gradient-{% cycle 'primary' 'secondary' 'tertiary' %} h-2"></div>
+                
+                <div class="p-6">
+                    <!-- Committee Icon and Type -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                            {% if committee.committee_type == 'editorial' %}
+                                <i class="fas fa-edit text-blue-600 text-xl"></i>
+                            {% elif committee.committee_type == 'cultural' %}
+                                <i class="fas fa-theater-masks text-green-600 text-xl"></i>
+                            {% elif committee.committee_type == 'pastoral' %}
+                                <i class="fas fa-pray text-purple-600 text-xl"></i>
+                            {% elif committee.committee_type == 'liturgical' %}
+                                <i class="fas fa-church text-red-600 text-xl"></i>
+                            {% elif committee.committee_type == 'academic' %}
+                                <i class="fas fa-graduation-cap text-indigo-600 text-xl"></i>
+                            {% elif committee.committee_type == 'finance' %}
+                                <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
+                            {% elif committee.committee_type == 'discipline' %}
+                                <i class="fas fa-gavel text-gray-600 text-xl"></i>
+                            {% else %}
+                                <i class="fas fa-users text-blue-600 text-xl"></i>
+                            {% endif %}
+                        </div>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                            {{ committee.get_committee_type_display }}
+                        </span>
+                    </div>
+
+                    <!-- Committee Name -->
+                    <h3 class="text-xl font-bold text-gray-800 mb-3">{{ committee.name }}</h3>
+
+                    <!-- Committee Description -->
+                    <p class="text-gray-600 mb-4 line-clamp-3">{{ committee.description|truncatewords:20 }}</p>
+
+                    <!-- Chairperson -->
+                    {% if committee.chairperson %}
+                    <div class="mb-4 p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-gray-800">{{ committee.chairperson.name }}</p>
+                                <p class="text-xs text-gray-500">Chairperson</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Members Count -->
+                    <div class="flex items-center justify-between text-sm text-gray-500">
+                        <span>
+                            <i class="fas fa-users mr-1"></i>
+                            {{ committee.members.count }} member{{ committee.members.count|pluralize }}
+                        </span>
+                        {% if committee.established_date %}
+                        <span>
+                            <i class="fas fa-calendar mr-1"></i>
+                            Est. {{ committee.established_date|date:"Y" }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Committee Members (if any) -->
+                    {% if committee.members.exists %}
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-2">Members:</h4>
+                        <div class="space-y-1">
+                            {% for member in committee.members.all|slice:":3" %}
+                            <div class="text-sm text-gray-600 flex items-center space-x-2">
+                                <i class="fas fa-user-circle text-gray-400"></i>
+                                <span>{{ member.name }}</span>
+                                <span class="text-xs text-gray-400">- {{ member.title }}</span>
+                            </div>
+                            {% endfor %}
+                            {% if committee.members.count > 3 %}
+                            <p class="text-xs text-gray-500 mt-2">
+                                +{{ committee.members.count|add:"-3" }} more member{{ committee.members.count|add:"-3"|pluralize }}
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full text-center py-12">
+                <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-users text-gray-400 text-3xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-600 mb-2">No Committees Found</h3>
+                <p class="text-gray-500">
+                    {% if selected_type %}
+                        No committees found for the selected type.
+                    {% else %}
+                        No committees are currently available.
+                    {% endif %}
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Additional Information -->
+        <div class="mt-16 bg-gray-50 rounded-2xl p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 font-serif mb-4">Committee Structure</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Our seminary committees work collaboratively to ensure smooth operations and continuous improvement in all aspects of seminary life.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-users-cog text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Collaborative Work</h3>
+                    <p class="text-gray-600">
+                        Committees work together across different areas to ensure comprehensive decision-making.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bullseye text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Focused Objectives</h3>
+                    <p class="text-gray-600">
+                        Each committee has specific goals and responsibilities to enhance seminary life.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Continuous Improvement</h3>
+                    <p class="text-gray-600">
+                        Regular evaluation and improvement of processes and seminary life quality.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Navigation -->
+        <div class="mt-12 text-center">
+            <a href="{% url 'about_seminary' %}" 
+               class="inline-flex items-center space-x-2 bg-gradient-primary text-white px-8 py-3 rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Our Seminary</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Filter animation
+document.addEventListener('DOMContentLoaded', function() {
+    const filterLinks = document.querySelectorAll('a[href*="?type="]');
+    
+    filterLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Add loading state
+            this.style.opacity = '0.6';
+            this.innerHTML += ' <i class="fas fa-spinner fa-spin ml-2"></i>';
+        });
+    });
+});
+</script>
+{% endblock %}

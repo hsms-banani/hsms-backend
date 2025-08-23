@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ publication_name }} - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-primary text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold font-serif mb-4 animate-fade-in-up">{{ publication_name }}</h1>
+            <p class="text-xl opacity-90 animate-fade-in-up" style="animation-delay: 0.2s;">
+                {% if publication_type == 'ankur' %}
+                    Research contributions by our seminary students
+                {% elif publication_type == 'diptto_sakhyo' %}
+                    Academic journal of the seminary community
+                {% elif publication_type == 'prodipon' %}
+                    Scholarly theological research and reflections
+                {% endif %}
+            </p>
+            <nav class="text-lg opacity-80 mt-4 animate-fade-in-up" style="animation-delay: 0.3s;">
+                <a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors">Home</a>
+                <span class="mx-3">/</span>
+                <a href="{% url 'publications' %}" class="hover:text-blue-200 transition-colors">Publications</a>
+                <span class="mx-3">/</span>
+                <span>{{ publication_name }}</span>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Results Info -->
+<section class="py-4 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center text-gray-600">
+            Showing {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ page_obj.paginator.count }} publications
+        </div>
+    </div>
+</section>
+
+<!-- Publications List -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        {% if page_obj %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for publication in page_obj %}
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="{% if publication_type == 'ankur' %}bg-blue-100 text-blue-600{% elif publication_type == 'diptto_sakhyo' %}bg-green-100 text-green-600{% elif publication_type == 'prodipon' %}bg-purple-100 text-purple-600{% endif %} p-2 rounded">
+                                {% if publication_type == 'ankur' %}
+                                    <i class="fas fa-graduation-cap"></i>
+                                {% elif publication_type == 'diptto_sakhyo' %}
+                                    <i class="fas fa-journal-whills"></i>
+                                {% elif publication_type == 'prodipon' %}
+                                    <i class="fas fa-cross"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <span class="{% if publication_type == 'ankur' %}bg-blue-100 text-blue-800{% elif publication_type == 'diptto_sakhyo' %}bg-green-100 text-green-800{% elif publication_type == 'prodipon' %}bg-purple-100 text-purple-800{% endif %} text-xs px-2 py-1 rounded-full">
+                            {{ publication.publication_date|date:"Y" }}
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-xl font-semibold mb-3 line-clamp-2">{{ publication.title }}</h3>
+                    <p class="text-gray-600 text-sm mb-2">By {{ publication.author }}</p>
+                    
+                    {% if publication.co_authors %}
+                    <p class="text-gray-500 text-xs mb-2">Co-authors: {{ publication.co_authors }}</p>
+                    {% endif %}
+                    
+                    {% if publication.volume %}
+                    <p class="text-gray-500 text-sm mb-2">
+                        Volume {{ publication.volume }}{% if publication.issue %}, Issue {{ publication.issue }}{% endif %}
+                        {% if publication.page_numbers %} (pp. {{ publication.page_numbers }}){% endif %}
+                    </p>
+                    {% endif %}
+                    
+                    {% if publication.abstract %}
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-3">{{ publication.abstract|striptags|truncatewords:20 }}</p>
+                    {% endif %}
+                    
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <a href="{{ publication.get_absolute_url }}" 
+                           class="text-blue-600 font-medium hover:text-blue-800 transition-colors text-sm">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                        {% if publication.pdf_file %}
+                        <a href="{% url 'download_publication' publication.slug %}" 
+                           class="flex items-center text-green-600 hover:text-green-800 transition-colors text-sm">
+                            <i class="fas fa-download mr-1"></i>PDF
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    {% if publication.download_count > 0 %}
+                    <div class="mt-2 text-xs text-gray-400">
+                        Downloaded {{ publication.download_count }} time{{ publication.download_count|pluralize }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if page_obj.has_other_pages %}
+            <div class="mt-12 flex justify-center">
+                <nav class="flex items-center space-x-2" aria-label="Pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1" 
+                           class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-l-md hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                            First
+                        </a>
+                        <a href="?page={{ page_obj.previous_page_number }}" 
+                           class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    {% else %}
+                        <span class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-300 rounded-l-md cursor-not-allowed">
+                            First
+                        </span>
+                        <span class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-300 cursor-not-allowed">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    {% endif %}
+
+                    <!-- Page Numbers -->
+                    {% for page_num in page_obj.paginator.page_range %}
+                        {% if page_num == page_obj.number %}
+                            <span class="px-4 py-2 text-sm font-medium text-white bg-gradient-primary border border-blue-500">
+                                {{ page_num }}
+                            </span>
+                        {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+                            <a href="?page={{ page_num }}" 
+                               class="px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                                {{ page_num }}
+                            </a>
+                        {% elif page_num == page_obj.number|add:'-4' or page_num == page_obj.number|add:'4' %}
+                            <span class="px-2 py-2 text-sm font-medium text-gray-400">...</span>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" 
+                           class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}" 
+                           class="px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-r-md hover:bg-gray-50 hover:text-gray-700 transition-colors">
+                            Last
+                        </a>
+                    {% else %}
+                        <span class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-300 cursor-not-allowed">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <span class="px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-300 rounded-r-md cursor-not-allowed">
+                            Last
+                        </span>
+                    {% endif %}
+                </nav>
+            </div>
+            
+            <!-- Page Info -->
+            <div class="mt-4 text-center text-sm text-gray-600">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </div>
+            {% endif %}
+        {% else %}
+            <!-- No Publications Found -->
+            <div class="text-center py-12">
+                <div class="text-6xl text-gray-300 mb-4">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-2">No Publications Found</h3>
+                <p class="text-gray-500 mb-6">No publications are currently available for {{ publication_name }}.</p>
+                <a href="{% url 'publications' %}" 
+                   class="inline-block px-6 py-3 bg-gradient-primary text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+                    View All Publications
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Back to Publications -->
+<section class="py-8 bg-gray-50">
+    <div class="container mx-auto px-4 text-center">
+        <a href="{% url 'publications' %}" 
+           class="inline-flex items-center px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-white hover:shadow-md transition-all duration-300">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to All Publications
+        </a>
+    </div>
+</section>
+{% endblock %}

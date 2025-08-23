@@ -1,0 +1,103 @@
+<!-- seminary/news_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ news_item.title }} - News - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Article Header -->
+<article class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <!-- Breadcrumb -->
+            <nav class="text-sm text-gray-600 mb-8">
+                <a href="{% url 'home' %}" class="hover:text-blue-600">Home</a>
+                <span class="mx-2">/</span>
+                <a href="{% url 'news_list' %}" class="hover:text-blue-600">News</a>
+                <span class="mx-2">/</span>
+                <span>{{ news_item.title|truncatewords:5 }}</span>
+            </nav>
+            
+            <!-- Article Meta -->
+            <div class="mb-8">
+                <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-4">
+                    <span><i class="fas fa-calendar mr-2"></i>{{ news_item.created_at|date:"M d, Y" }}</span>
+                    <span><i class="fas fa-eye mr-2"></i>{{ news_item.view_count }} views</span>
+                    {% if news_item.is_featured %}
+                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs">Featured</span>
+                    {% endif %}
+                </div>
+                <h1 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ news_item.title }}</h1>
+                <p class="text-xl text-gray-600">{{ news_item.excerpt }}</p>
+            </div>
+            
+            <!-- Featured Image -->
+            {% if news_item.featured_image %}
+            <div class="mb-12">
+                <img src="{{ news_item.featured_image.url }}" 
+                     alt="{{ news_item.title }}" 
+                     class="w-full h-96 object-cover rounded-lg shadow-lg">
+            </div>
+            {% endif %}
+            
+            <!-- Article Content -->
+            <div class="prose prose-lg max-w-none mb-12">
+                {{ news_item.content|linebreaks }}
+            </div>
+            
+            <!-- Share Buttons -->
+            <div class="border-t border-gray-200 pt-8">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-600">Share:</span>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                           target="_blank"
+                           class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ news_item.title }}" 
+                           target="_blank"
+                           class="w-10 h-10 bg-blue-400 text-white rounded-full flex items-center justify-center hover:bg-blue-500">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                    </div>
+                    <a href="{% url 'news_list' %}" 
+                       class="text-blue-600 hover:text-blue-800 font-medium">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to News
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- Related News -->
+{% if related_news %}
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-bold font-serif text-center mb-12">Related News</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for news in related_news %}
+                <article class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
+                    {% if news.featured_image %}
+                    <img src="{{ news.featured_image.url }}" 
+                         alt="{{ news.title }}" 
+                         class="w-full h-48 object-cover rounded-t-lg">
+                    {% endif %}
+                    <div class="p-6">
+                        <div class="text-sm text-blue-600 mb-2">{{ news.created_at|date:"M d, Y" }}</div>
+                        <h3 class="text-lg font-semibold mb-3">{{ news.title|truncatewords:8 }}</h3>
+                        <p class="text-gray-600 mb-4">{{ news.excerpt|truncatewords:15 }}</p>
+                        <a href="{{ news.get_absolute_url }}" 
+                           class="text-blue-600 font-medium hover:text-blue-800">
+                            Read More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

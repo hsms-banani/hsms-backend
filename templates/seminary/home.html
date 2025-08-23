@@ -1,0 +1,719 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Holy Spirit Major Seminary - Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Slider styles */
+    .hero-slider {
+        position: relative;
+        height: 70vh;
+        overflow: hidden;
+    }
+    
+    .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+    }
+    
+    .slide.active {
+        opacity: 1;
+    }
+    
+    .slide-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    
+    .slide-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Professional announcement ticker enhancements */
+    .announcement-ticker {
+        position: relative;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(10px);
+        transition: all 0.5s ease-in-out;
+        border-bottom: 3px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .announcement-ticker:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Enhanced gradient backgrounds based on priority */
+    .announcement-ticker[data-priority="urgent"] {
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+    }
+
+    .announcement-ticker[data-priority="high"] {
+        background: linear-gradient(135deg, #ea580c, #c2410c);
+    }
+
+    .announcement-ticker[data-priority="medium"] {
+        background: linear-gradient(135deg, #1e40af, #1e3a8a);
+    }
+
+    .announcement-ticker[data-priority="low"] {
+        background: linear-gradient(135deg, #059669, #047857);
+    }
+
+    /* Shimmer animation */
+    @keyframes shimmer {
+        0% { transform: translateX(-100%) skewX(-12deg); }
+        100% { transform: translateX(200%) skewX(-12deg); }
+    }
+
+    .animate-shimmer {
+        animation: shimmer 3s infinite;
+    }
+
+    /* Smooth transitions for announcement items */
+    .announcement-item {
+        transition: opacity 0.7s ease-in-out, transform 0.7s ease-in-out;
+    }
+
+    /* Text animations */
+    .announcement-item h3 {
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .announcement-item p {
+        animation: fadeInUp 0.6s ease-out 0.1s both;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Button hover effects */
+    .announcement-ticker button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .announcement-ticker button:active {
+        transform: scale(0.98);
+    }
+
+    /* Priority-based styling */
+    .announcement-item[data-priority="urgent"] {
+        animation: urgentPulse 2s infinite;
+    }
+
+    @keyframes urgentPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.8; }
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 640px) {
+        .announcement-ticker {
+            padding: 0.75rem 0;
+        }
+        
+        .announcement-ticker .container {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+        
+        .announcement-item h3 {
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+        
+        .announcement-item p {
+            font-size: 0.875rem;
+            line-height: 1.3;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .announcement-ticker .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        
+        .announcement-ticker .flex {
+            flex-wrap: wrap;
+        }
+    }
+
+    /* Accessibility improvements */
+    .announcement-ticker button:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 2px;
+    }
+
+    /* Hide scrollbars */
+    .announcement-ticker {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .announcement-ticker::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+        .announcement-ticker,
+        .announcement-item,
+        .animate-shimmer,
+        .animate-pulse {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Hero Slider -->
+    <section class="hero-slider" x-data="slider()" x-init="init()">
+        {% for slider in sliders %}
+        <div class="slide" :class="{ 'active': currentSlide === {{ forloop.counter0 }} }">
+            <img src="{{ slider.image.url }}" alt="{{ slider.title }}" class="w-full h-full object-cover">
+        </div>
+        {% endfor %}
+        <!-- Slider Navigation -->
+        {% if sliders|length > 1 %}
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+            {% for slider in sliders %}
+            <button 
+                @click="currentSlide = {{ forloop.counter0 }}"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="currentSlide === {{ forloop.counter0 }} ? 'bg-white' : 'bg-white/50'"
+            ></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Professional Announcements Bar -->
+    {% if current_announcements %}
+    <div class="announcement-ticker bg-gradient-to-r from-slate-700 to-slate-900 shadow-lg relative overflow-hidden" 
+         data-priority="{{ current_announcements.0.priority }}"
+         x-data="announcementTicker()" x-init="init()"
+         :data-priority="getCurrentPriority()">
+        
+        <!-- Animated background pattern -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transform -skew-x-12 animate-shimmer"></div>
+        </div>
+        
+        <!-- Main content container -->
+        <div class="relative z-10 py-4">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center">
+                    
+                    <!-- Icon Only -->
+                    <div class="flex items-center bg-white bg-opacity-15 rounded-full px-3 py-2 mr-6 backdrop-blur-sm">
+                        <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></div>
+                        <i class="fas fa-bullhorn text-white text-lg"></i>
+                    </div>
+                    
+                    <!-- Announcements Container -->
+                    <div class="flex-1 relative overflow-hidden h-12">
+                        {% for announcement in current_announcements %}
+                        <div class="announcement-item absolute inset-0 flex items-center opacity-0 transform translate-y-full transition-all duration-700 ease-in-out"
+                             :class="{ 'opacity-100 translate-y-0': currentIndex === {{ forloop.counter0 }} }">
+                            
+                            <!-- Priority Badge -->
+                            {% if announcement.priority == 'urgent' %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 mr-3">
+                                <span class="w-1.5 h-1.5 bg-red-500 rounded-full mr-1 animate-pulse"></span>
+                                URGENT
+                            </span>
+                            {% elif announcement.priority == 'high' %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800 mr-3">
+                                HIGH
+                            </span>
+                            {% endif %}
+                            
+                            <!-- Announcement Content -->
+                            <div class="flex-1 min-w-0">
+                                <h3 class="text-white font-semibold text-lg truncate mb-1">
+                                    {{ announcement.title }}
+                                </h3>
+                                {% if announcement.content|striptags|truncatewords:20 != announcement.title %}
+                                <p class="text-white text-opacity-90 text-sm truncate">
+                                    {{ announcement.content|striptags|truncatewords:20 }}
+                                </p>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Target Audience Badge -->
+                            {% if announcement.target_audience != 'all' %}
+                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-white bg-opacity-20 text-white ml-3 backdrop-blur-sm">
+                                <i class="fas fa-users mr-1"></i>
+                                {{ announcement.get_target_audience_display }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Controls -->
+                    <div class="flex items-center space-x-3 ml-6">
+                        <!-- Progress bar -->
+                        <div class="hidden md:block w-16 h-1 bg-white bg-opacity-30 rounded-full overflow-hidden">
+                            <div class="h-full bg-white rounded-full transition-all duration-300 ease-linear"
+                                 :style="`width: ${progress}%`"></div>
+                        </div>
+                        
+                        <!-- Navigation buttons -->
+                        <div class="flex space-x-1">
+                            <button @click="prevAnnouncement()" 
+                                    class="w-8 h-8 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm">
+                                <i class="fas fa-chevron-left text-xs"></i>
+                            </button>
+                            <button @click="nextAnnouncement()" 
+                                    class="w-8 h-8 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm">
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Play/Pause button -->
+                        <button @click="toggleAutoPlay()" 
+                                class="w-8 h-8 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm">
+                            <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'" class="text-xs"></i>
+                        </button>
+                        
+                        <!-- Close button -->
+                        <button @click="closeAnnouncements()" 
+                                class="w-8 h-8 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-full flex items-center justify-center text-white transition-all duration-200 backdrop-blur-sm">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Dots indicator (mobile) -->
+                {% if current_announcements|length > 1 %}
+                <div class="flex justify-center mt-3 space-x-2 md:hidden">
+                    {% for announcement in current_announcements %}
+                    <button @click="goToAnnouncement({{ forloop.counter0 }})"
+                            class="w-2 h-2 rounded-full transition-all duration-200"
+                            :class="currentIndex === {{ forloop.counter0 }} ? 'bg-white' : 'bg-white bg-opacity-40'">
+                    </button>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Welcome Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Welcome to Our Seminary</h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Holy Spirit Major Seminary is committed to forming future priests through comprehensive education in Philosophy and Theology, fostering spiritual growth and service to the Church and society.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center group hover-lift">
+                    <div class="w-20 h-20 bg-gradient-primary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Academic Excellence</h3>
+                    <p class="text-gray-600">Comprehensive programs in Philosophy and Theology designed to provide deep understanding and practical application.</p>
+                </div>
+                
+                <div class="text-center group hover-lift">
+                    <div class="w-20 h-20 bg-gradient-secondary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-praying-hands text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Spiritual Formation</h3>
+                    <p class="text-gray-600">Nurturing spiritual growth through prayer, contemplation, and service to prepare faithful servants of God.</p>
+                </div>
+                
+                <div class="text-center group hover-lift">
+                    <div class="w-20 h-20 bg-gradient-tertiary rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-hands-helping text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold mb-4">Community Service</h3>
+                    <p class="text-gray-600">Engaging with local communities to serve those in need and spread the message of love and compassion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured News -->
+    {% if featured_news %}
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800">Latest News</h2>
+                <a href="{% url 'news_list' %}" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+                    View All News <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for news in featured_news %}
+                <article class="bg-white rounded-lg shadow-md overflow-hidden hover-lift">
+                    {% if news.featured_image %}
+                    <img src="{{ news.featured_image.url }}" alt="{{ news.title }}" class="w-full h-48 object-cover">
+                    {% else %}
+                    <div class="w-full h-48 bg-gradient-primary flex items-center justify-center">
+                        <i class="fas fa-newspaper text-white text-4xl"></i>
+                    </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3 line-clamp-2">
+                            <a href="{{ news.get_absolute_url }}" class="hover:text-blue-600 transition-colors">{{ news.title }}</a>
+                        </h3>
+                        <p class="text-gray-600 mb-4 line-clamp-3">{{ news.excerpt }}</p>
+                        <div class="flex justify-between items-center text-sm text-gray-500">
+                            <span>{{ news.created_at|date:"M d, Y" }}</span>
+                            <a href="{{ news.get_absolute_url }}" class="text-blue-600 hover:text-blue-800 font-medium">Read More</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Upcoming Events -->
+    {% if upcoming_events %}
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800">Upcoming Events</h2>
+                <a href="{% url 'events_list' %}" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+                    View All Events <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for event in upcoming_events %}
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover-lift">
+                    <div class="bg-gradient-primary text-white p-4 text-center">
+                        <div class="text-3xl font-bold">{{ event.start_date|date:"d" }}</div>
+                        <div class="text-sm">{{ event.start_date|date:"M Y" }}</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-3">
+                            <a href="{{ event.get_absolute_url }}" class="hover:text-blue-600 transition-colors">{{ event.title }}</a>
+                        </h3>
+                        <p class="text-gray-600 mb-4 line-clamp-3">{{ event.description|truncatewords:20 }}</p>
+                        {% if event.location %}
+                        <p class="text-sm text-gray-500 mb-2">
+                            <i class="fas fa-map-marker-alt mr-1"></i> {{ event.location }}
+                        </p>
+                        {% endif %}
+                        <p class="text-sm text-gray-500 mb-4">
+                            <i class="fas fa-clock mr-1"></i> {{ event.start_date|date:"g:i A" }}
+                        </p>
+                        <a href="{{ event.get_absolute_url }}" class="text-blue-600 hover:text-blue-800 font-medium">Learn More</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Faculty Highlights -->
+    {% if faculty_highlights %}
+    <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800">Our Faculty</h2>
+                <a href="{% url 'faculty_list' %}" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+                    View All Faculty <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                {% for faculty in faculty_highlights %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover-lift text-center">
+                    {% if faculty.photo %}
+                    <img src="{{ faculty.photo.url }}" alt="{{ faculty.name }}" class="w-full h-48 object-contain">
+                    {% else %}
+                    <div class="w-full h-48 bg-gradient-primary flex items-center justify-center">
+                        <i class="fas fa-user text-white text-4xl"></i>
+                    </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ faculty.name }}</h3>
+                        <p class="text-gray-600 mb-2">{{ faculty.title }}</p>
+                        <p class="text-sm text-gray-500">{{ faculty.get_department_display }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Recent Publications -->
+    {% if recent_publications %}
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800">Recent Publications</h2>
+                <a href="{% url 'publications' %}" class="text-blue-600 hover:text-blue-800 font-semibold flex items-center">
+                    View All Publications <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for publication in recent_publications %}
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden hover-lift">
+                    {% if publication.cover_image %}
+                    <img src="{{ publication.cover_image.url }}" alt="{{ publication.title }}" class="w-full h-48 object-cover">
+                    {% else %}
+                    <div class="w-full h-48 bg-gradient-primary flex items-center justify-center">
+                        <i class="fas fa-book text-white text-4xl"></i>
+                    </div>
+                    {% endif %}
+                    <div class="p-6">
+                        <div class="text-sm text-blue-600 mb-2">{{ publication.get_publication_type_display }}</div>
+                        <h3 class="text-xl font-semibold mb-3">
+                            <a href="{{ publication.get_absolute_url }}" class="hover:text-blue-600 transition-colors">{{ publication.title }}</a>
+                        </h3>
+                        <p class="text-gray-600 mb-2">By {{ publication.author }}</p>
+                        <p class="text-sm text-gray-500 mb-4">{{ publication.publication_date|date:"M Y" }}</p>
+                        <a href="{{ publication.get_absolute_url }}" class="text-blue-600 hover:text-blue-800 font-medium">Read More</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Hero Slider functionality
+    function slider() {
+        return {
+            currentSlide: 0,
+            totalSlides: {{ sliders|length|default:1 }},
+            
+            init() {
+                if (this.totalSlides > 1) {
+                    setInterval(() => {
+                        this.nextSlide();
+                    }, 5000);
+                }
+            },
+            
+            nextSlide() {
+                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+            },
+            
+            prevSlide() {
+                this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+            }
+        }
+    }
+
+    // Enhanced announcement ticker functionality
+    function announcementTicker() {
+        return {
+            currentIndex: 0,
+            totalAnnouncements: {{ current_announcements|length|default:0 }},
+            isPlaying: true,
+            progress: 0,
+            interval: null,
+            progressInterval: null,
+            duration: 5000, // 5 seconds per announcement
+            isVisible: true,
+            
+            init() {
+                if (this.totalAnnouncements > 1) {
+                    this.startAutoPlay();
+                }
+                
+                // Add keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (!this.isVisible) return;
+                    
+                    if (e.key === 'ArrowLeft') {
+                        this.prevAnnouncement();
+                    } else if (e.key === 'ArrowRight') {
+                        this.nextAnnouncement();
+                    } else if (e.key === ' ') {
+                        e.preventDefault();
+                        this.toggleAutoPlay();
+                    }
+                });
+            },
+
+            getCurrentPriority() {
+                const announcements = [
+                    {% for announcement in current_announcements %}
+                    '{{ announcement.priority }}'{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ];
+                return announcements[this.currentIndex] || 'medium';
+            },
+            
+            // Update ticker styling based on current announcement priority
+            updateTickerStyling() {
+                const ticker = document.querySelector('.announcement-ticker');
+                const priority = this.getCurrentPriority();
+                if (ticker) {
+                    ticker.setAttribute('data-priority', priority);
+                }
+            },
+            
+            startAutoPlay() {
+                if (this.interval) clearInterval(this.interval);
+                if (this.progressInterval) clearInterval(this.progressInterval);
+                
+                this.progress = 0;
+                
+                // Progress bar animation
+                this.progressInterval = setInterval(() => {
+                    this.progress += (100 / (this.duration / 50));
+                    if (this.progress >= 100) {
+                        this.progress = 100;
+                    }
+                }, 50);
+                
+                // Auto advance
+                this.interval = setInterval(() => {
+                    this.nextAnnouncement();
+                }, this.duration);
+                
+                this.isPlaying = true;
+            },
+            
+            stopAutoPlay() {
+                if (this.interval) clearInterval(this.interval);
+                if (this.progressInterval) clearInterval(this.progressInterval);
+                this.isPlaying = false;
+            },
+            
+            toggleAutoPlay() {
+                if (this.isPlaying) {
+                    this.stopAutoPlay();
+                } else {
+                    this.startAutoPlay();
+                }
+            },
+            
+            nextAnnouncement() {
+                this.currentIndex = (this.currentIndex + 1) % this.totalAnnouncements;
+                this.updateTickerStyling();
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
+                
+                // Add haptic feedback on mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate(50);
+                }
+            },
+            
+            prevAnnouncement() {
+                this.currentIndex = this.currentIndex === 0 ? this.totalAnnouncements - 1 : this.currentIndex - 1;
+                this.updateTickerStyling();
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
+            },
+            
+            goToAnnouncement(index) {
+                this.currentIndex = index;
+                this.updateTickerStyling();
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
+            },
+            
+            resetProgress() {
+                this.progress = 0;
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                    this.progressInterval = setInterval(() => {
+                        this.progress += (100 / (this.duration / 50));
+                        if (this.progress >= 100) {
+                            this.progress = 100;
+                        }
+                    }, 50);
+                }
+            },
+            
+            closeAnnouncements() {
+                this.isVisible = false;
+                this.stopAutoPlay();
+                
+                // Animate out
+                const ticker = document.querySelector('.announcement-ticker');
+                if (ticker) {
+                    ticker.style.transform = 'translateY(-100%)';
+                    ticker.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        ticker.style.display = 'none';
+                    }, 500);
+                }
+                
+                // Store in session storage so it doesn't show again
+                sessionStorage.setItem('announcementsClosed', 'true');
+            }
+        }
+    }
+
+    // Check if announcements were previously closed
+    document.addEventListener('DOMContentLoaded', function() {
+        if (sessionStorage.getItem('announcementsClosed') === 'true') {
+            const ticker = document.querySelector('.announcement-ticker');
+            if (ticker) {
+                ticker.style.display = 'none';
+            }
+        }
+    });
+
+    // Line clamp utility (for text truncation)
+    const style = document.createElement('style');
+    style.textContent = `
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}

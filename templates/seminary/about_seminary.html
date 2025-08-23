@@ -1,0 +1,450 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Our Seminary - Holy Spirit Major Seminary{% endblock %}
+
+{% block meta_description %}Learn about Holy Spirit Major Seminary - our mission, vision, formation programs, and commitment to serving God and the Church in Bangladesh.{% endblock %}
+
+{% block extra_css %}
+<style>
+/* Rich content styling for seminary sections */
+.seminary-section {
+    padding: 4rem 0;
+}
+
+.seminary-section:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.seminary-content {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.seminary-content h1,
+.seminary-content h2,
+.seminary-content h3,
+.seminary-content h4 {
+    font-family: 'Playfair Display', serif;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.seminary-content h2 {
+    font-size: 2rem;
+    color: #4f46e5;
+    border-left: 4px solid #667eea;
+    padding-left: 1rem;
+    margin-bottom: 2rem;
+}
+
+.seminary-content p {
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    text-align: justify;
+}
+
+.seminary-content ul,
+.seminary-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.seminary-content li {
+    margin-bottom: 0.75rem;
+}
+
+.seminary-content blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #4b5563;
+    background-color: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 0.5rem;
+}
+
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+}
+
+.committee-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.committee-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.announcement-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+    margin: 3rem 0;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-primary text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold font-serif mb-6 animate-fade-in-up">Our Seminary</h1>
+            <p class="text-xl opacity-90 leading-relaxed animate-fade-in-up" style="animation-delay: 0.2s;">
+                Holy Spirit Major Seminary - Dedicated to forming faithful servants of God through comprehensive education in Philosophy and Theology
+            </p>
+            <div class="mt-8 animate-fade-in-up" style="animation-delay: 0.4s;">
+                <nav class="text-lg">
+                    <a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors">Home</a>
+                    <span class="mx-3">/</span>
+                    <span>Our Seminary</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Stats Section -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="stats-card">
+                    <div class="text-3xl font-bold mb-2">{{ faculty_count|default:"15+" }}</div>
+                    <div class="text-sm opacity-90">Faculty Members</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold mb-2">{{ committees_count|default:"8+" }}</div>
+                    <div class="text-sm opacity-90">Committees</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold mb-2">50+</div>
+                    <div class="text-sm opacity-90">Years of Service</div>
+                </div>
+                <div class="stats-card">
+                    <div class="text-3xl font-bold mb-2">100+</div>
+                    <div class="text-sm opacity-90">Graduates Serving</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Current Announcements -->
+{% if current_announcements %}
+<section class="py-8 bg-blue-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl font-bold font-serif text-center mb-6 text-gray-800">Current Announcements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for announcement in current_announcements %}
+                <div class="bg-white rounded-lg p-6 shadow hover:shadow-lg transition-shadow">
+                    <div class="announcement-badge">
+                        {{ announcement.get_priority_display }}
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ announcement.title }}</h3>
+                    <p class="text-gray-600 text-sm">{{ announcement.content|truncatewords:20 }}</p>
+                    <div class="mt-3 text-xs text-gray-500">
+                        <i class="fas fa-users mr-1"></i> {{ announcement.target_audience }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Rector's Welcome Section -->
+{% if rector_message %}
+<section class="seminary-section">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Rector's Welcome</h2>
+                <div class="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="seminary-content">
+                    {{ rector_message.content|safe }}
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{% url 'rector_welcome' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        Read Full Message 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Mission & Vision Section -->
+{% if mission_vision %}
+<section class="seminary-section bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Mission & Vision</h2>
+                <div class="w-24 h-1 bg-gradient-secondary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="seminary-content">
+                    {{ mission_vision.content|safe }}
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{% url 'mission_vision' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-secondary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        Learn More 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Seminary History Section -->
+{% if history %}
+<section class="seminary-section">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Our History</h2>
+                <div class="w-24 h-1 bg-gradient-tertiary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="seminary-content">
+                    {{ history.content|safe }}
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{% url 'seminary_history' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-tertiary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        Explore Our Heritage 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Formation Program Section -->
+{% if formation_program %}
+<section class="seminary-section bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Formation Program</h2>
+                <div class="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="seminary-content">
+                    {{ formation_program.content|safe }}
+                </div>
+                <div class="text-center mt-8">
+                    <a href="{% url 'formation_program' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        View Full Program 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Committees Section -->
+{% if committees %}
+<section class="seminary-section">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Seminary Committees</h2>
+                <div class="w-24 h-1 bg-gradient-secondary mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-4 max-w-2xl mx-auto">
+                    Our committees work together to ensure the smooth operation and continuous improvement of seminary life and education.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for committee in committees %}
+                <div class="committee-card">
+                    <div class="flex items-start justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">{{ committee.name }}</h3>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                            {{ committee.get_committee_type_display }}
+                        </span>
+                    </div>
+                    
+                    {% if committee.description %}
+                    <p class="text-gray-600 text-sm mb-4">{{ committee.description|truncatewords:15 }}</p>
+                    {% endif %}
+                    
+                    {% if committee.members.exists %}
+                    <div class="text-xs text-gray-500">
+                        <i class="fas fa-users mr-1"></i>
+                        {{ committee.members.count }} member{{ committee.members.count|pluralize }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="{% url 'committees' %}" 
+                   class="inline-flex items-center px-6 py-3 bg-gradient-secondary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    View All Committees 
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Quick Links Section -->
+<section class="py-16 bg-gradient-primary text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold font-serif mb-4">Explore More</h2>
+                <p class="text-xl opacity-90">
+                    Discover the various aspects of our seminary community
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a href="{% url 'hsit_about' %}" 
+                   class="group block bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-colors">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">HSIT</h3>
+                    <p class="text-sm opacity-80">Holy Spirit Institute of Theology - Academic Excellence</p>
+                </a>
+                
+                <a href="{% url 'faculty_list' %}" 
+                   class="group block bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-colors">
+                        <i class="fas fa-users text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Our Faculty</h3>
+                    <p class="text-sm opacity-80">Meet our dedicated educators and spiritual mentors</p>
+                </a>
+                
+                <a href="{% url 'spiritual_food' %}" 
+                   class="group block bg-white/10 backdrop-blur-sm rounded-lg p-6 text-center hover:bg-white/20 transition-all duration-300 hover:transform hover:-translate-y-2">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-white/30 transition-colors">
+                        <i class="fas fa-pray text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Spiritual Life</h3>
+                    <p class="text-sm opacity-80">Prayer services, homilies, and spiritual guidance</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Call-to-Action -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold font-serif text-gray-800 mb-6">Have Questions About Our Seminary?</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                We're here to help you learn more about our formation programs, admissions process, and seminary life.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'contact' %}" 
+                   class="inline-flex items-center px-8 py-3 bg-gradient-primary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    Contact Us 
+                    <i class="fas fa-envelope ml-2"></i>
+                </a>
+                <a href="{% url 'events_list' %}" 
+                   class="inline-flex items-center px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-full hover:border-gray-400 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                    View Events 
+                    <i class="fas fa-calendar ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate statistics on scroll
+    const statsCards = document.querySelectorAll('.stats-card');
+    
+    const observerOptions = {
+        threshold: 0.5,
+        rootMargin: '0px 0px -100px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = Math.random() * 0.5 + 's';
+                entry.target.classList.add('animate-fade-in-up');
+            }
+        });
+    }, observerOptions);
+    
+    statsCards.forEach(card => {
+        observer.observe(card);
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+<!-- seminary/contact.html -->
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-primary text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold font-serif mb-4">Contact Us</h1>
+            <p class="text-xl opacity-90">Get in touch with Holy Spirit Major Seminary</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information & Form -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <!-- Contact Information -->
+            <div>
+                <h2 class="text-3xl font-bold font-serif mb-8">Get In Touch</h2>
+                <div class="space-y-6 mb-8">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-primary text-white rounded-lg flex items-center justify-center">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Address</h3>
+                            <p class="text-gray-600">
+                                Holy Spirit Major Seminary<br>
+                                Block A-112, Road 27, Banani, Dhaka 1213<br>
+                                Bangladesh
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start space-x-4">
+                        <div class="w-12 h-12 bg-gradient-primary text-white rounded-lg flex items-center justify-center">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-2">Email</h3>
+                            <p class="text-gray-600">hsmsmajorseminary@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Map -->
+                <div class="h-64 bg-gray-200 rounded-lg">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.847!2d90.40487!3d23.793611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDQ3JzM3LjAiTiA5MMKwMjQnMTcuNSJF!5e0!3m2!1sen!2sbd!4v1639396800000!5m2!1sen!2sbd" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+            
+            <!-- Contact Form -->
+            <div>
+                <h2 class="text-3xl font-bold font-serif mb-8">Send Us a Message</h2>
+                <div id="contact-form">
+                    {% include 'seminary/partials/contact_form.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

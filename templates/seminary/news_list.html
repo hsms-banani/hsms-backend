@@ -1,0 +1,65 @@
+<!-- seminary/news_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}News - Holy Spirit Major Seminary{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-primary text-white py-20">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-5xl font-bold font-serif mb-4">Seminary News</h1>
+            <p class="text-xl opacity-90">Stay updated with the latest news and announcements</p>
+        </div>
+    </div>
+</section>
+
+<!-- Search Bar -->
+<section class="py-8 bg-white border-b border-gray-200">
+    <div class="container mx-auto px-4">
+        <div class="max-w-lg mx-auto">
+            <form method="GET" class="flex">
+                <input type="text" 
+                       name="q" 
+                       value="{{ search_query }}" 
+                       placeholder="Search news..." 
+                       class="flex-1 px-4 py-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button type="submit" 
+                        class="px-6 py-3 bg-gradient-primary text-white rounded-r-lg hover:shadow-lg transition-all">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Featured News Sidebar -->
+{% if featured_news and not search_query %}
+<section class="py-8 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <h2 class="text-2xl font-bold font-serif text-center mb-8">Featured News</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {% for news in featured_news %}
+            <div class="bg-white rounded-lg shadow p-4">
+                <div class="text-sm text-blue-600 mb-2">{{ news.created_at|date:"M d, Y" }}</div>
+                <h3 class="font-semibold mb-2">{{ news.title|truncatewords:8 }}</h3>
+                <p class="text-gray-600 text-sm">{{ news.excerpt|truncatewords:15 }}</p>
+                <a href="{{ news.get_absolute_url }}" class="text-blue-600 text-sm hover:text-blue-800">
+                    Read More <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- News List -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div id="news-list">
+            {% include 'seminary/partials/news_list.html' %}
+        </div>
+    </div>
+</section>
+{% endblock %}

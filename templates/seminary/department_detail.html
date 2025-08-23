@@ -1,0 +1,447 @@
+<!-- seminary/department_detail.html -->
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %}{{ department_name }} Department - HSIT{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="bg-gradient-primary text-white py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black opacity-10"></div>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="flex justify-center mb-6">
+                {% if department_name == 'Philosophy' %}
+                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-brain text-4xl"></i>
+                </div>
+                {% else %}
+                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-cross text-4xl"></i>
+                </div>
+                {% endif %}
+            </div>
+            <h1 class="text-5xl font-bold font-serif mb-4">Department of {{ department_name }}</h1>
+            <p class="text-xl opacity-90 leading-relaxed">
+                {% if department_name == 'Philosophy' %}
+                Building the foundation of rational thought, critical thinking, and ethical reasoning
+                {% else %}
+                Deepening understanding of faith, sacred scripture, and church traditions
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <!-- Decorative Elements -->
+    <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -translate-y-32 translate-x-32"></div>
+    <div class="absolute bottom-0 left-0 w-48 h-48 bg-white opacity-5 rounded-full translate-y-24 -translate-x-24"></div>
+</section>
+
+<!-- Breadcrumb -->
+<div class="bg-gray-50 py-4">
+    <div class="container mx-auto px-4">
+        <nav class="text-sm">
+            <ol class="flex items-center space-x-2 text-gray-600">
+                <li><a href="{% url 'home' %}" class="hover:text-blue-600">Home</a></li>
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li><a href="{% url 'hsit_about' %}" class="hover:text-blue-600">About HSIT</a></li>
+                <li><i class="fas fa-chevron-right text-xs"></i></li>
+                <li class="text-gray-800 font-medium">Department of {{ department_name }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<!-- Department Overview -->
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+                <div>
+                    {% if department_name == 'Philosophy' %}
+                    <h2 class="text-3xl font-bold font-serif text-gray-800 mb-6">Philosophical Foundation</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        The Department of Philosophy at HSIT provides a comprehensive philosophical education that serves as the bedrock for theological studies. Our program emphasizes critical thinking, logical reasoning, and ethical reflection while exploring the fundamental questions of human existence.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        We believe that philosophy is not merely an academic exercise but a way of life that prepares future priests and religious leaders to engage meaningfully with the complexities of modern faith and reason.
+                    </p>
+                    {% else %}
+                    <h2 class="text-3xl font-bold font-serif text-gray-800 mb-6">Theological Excellence</h2>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        The Department of Theology at HSIT offers a rigorous and comprehensive theological education rooted in Catholic tradition while engaging with contemporary challenges. Our program prepares future priests and religious leaders for pastoral ministry and scholarly pursuits.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed">
+                        We integrate academic excellence with spiritual formation, ensuring our graduates are well-equipped to serve the Church and society with wisdom, compassion, and theological depth.
+                    </p>
+                    {% endif %}
+                </div>
+                
+                <div class="relative">
+                    {% if department_name == 'Philosophy' %}
+                    <div class="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 shadow-lg">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-lightbulb text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Critical Thinking</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-indigo-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-balance-scale text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Ethics</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-search text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Logic</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-blue-700 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-globe text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Metaphysics</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="bg-gradient-to-br from-red-50 to-pink-100 rounded-2xl p-8 shadow-lg">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-red-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-book-open text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Sacred Scripture</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-pink-600 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-church text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Systematic Theology</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-red-700 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-praying-hands text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Liturgy</h3>
+                            </div>
+                            <div class="text-center">
+                                <div class="w-16 h-16 bg-pink-700 text-white rounded-full flex items-center justify-center mx-auto mb-3">
+                                    <i class="fas fa-heart text-2xl"></i>
+                                </div>
+                                <h3 class="font-semibold text-gray-800">Pastoral Care</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Curriculum Section -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold font-serif text-gray-800 mb-4">Academic Curriculum</h2>
+                <p class="text-gray-600 text-lg">Comprehensive and progressive learning path</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% if department_name == 'Philosophy' %}
+                <!-- Philosophy Courses -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">History of Philosophy</h3>
+                    <p class="text-gray-600 text-sm mb-4">Ancient, Medieval, Modern, and Contemporary philosophical traditions</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Ancient Greek Philosophy</li>
+                        <li>• Medieval Scholasticism</li>
+                        <li>• Modern Rationalism</li>
+                        <li>• Contemporary Movements</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Metaphysics & Ontology</h3>
+                    <p class="text-gray-600 text-sm mb-4">Nature of being, existence, and reality</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Being and Existence</li>
+                        <li>• Substance and Accidents</li>
+                        <li>• Causality and Change</li>
+                        <li>• Person and Nature</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Epistemology</h3>
+                    <p class="text-gray-600 text-sm mb-4">Theory of knowledge and truth</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Sources of Knowledge</li>
+                        <li>• Truth and Certainty</li>
+                        <li>• Faith and Reason</li>
+                        <li>• Philosophical Method</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Ethics & Moral Philosophy</h3>
+                    <p class="text-gray-600 text-sm mb-4">Principles of right and wrong conduct</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Natural Law Theory</li>
+                        <li>• Virtue Ethics</li>
+                        <li>• Social Ethics</li>
+                        <li>• Bioethics</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Logic & Critical Thinking</h3>
+                    <p class="text-gray-600 text-sm mb-4">Principles of valid reasoning and argument</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Formal Logic</li>
+                        <li>• Informal Logic</li>
+                        <li>• Fallacies and Argumentation</li>
+                        <li>• Mathematical Logic</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-pray"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Philosophy of Religion</h3>
+                    <p class="text-gray-600 text-sm mb-4">Rational examination of religious beliefs</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Existence of God</li>
+                        <li>• Problem of Evil</li>
+                        <li>• Religious Experience</li>
+                        <li>• Faith and Reason</li>
+                    </ul>
+                </div>
+                
+                {% else %}
+                <!-- Theology Courses -->
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-red-100 text-red-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Sacred Scripture</h3>
+                    <p class="text-gray-600 text-sm mb-4">Old and New Testament studies</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Biblical Hermeneutics</li>
+                        <li>• Pentateuch and Historical Books</li>
+                        <li>• Prophetic and Wisdom Literature</li>
+                        <li>• Gospels and Pauline Letters</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-cross"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Systematic Theology</h3>
+                    <p class="text-gray-600 text-sm mb-4">Comprehensive study of Christian doctrine</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Trinity and Christology</li>
+                        <li>• Ecclesiology</li>
+                        <li>• Sacramental Theology</li>
+                        <li>• Eschatology</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Moral Theology</h3>
+                    <p class="text-gray-600 text-sm mb-4">Christian ethics and moral principles</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Fundamental Moral Theology</li>
+                        <li>• Social Teaching</li>
+                        <li>• Medical Ethics</li>
+                        <li>• Sexual Ethics</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Church History</h3>
+                    <p class="text-gray-600 text-sm mb-4">Historical development of Christianity</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Early Church</li>
+                        <li>• Patristic Period</li>
+                        <li>• Medieval Christianity</li>
+                        <li>• Modern Church History</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-praying-hands"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Liturgy & Sacraments</h3>
+                    <p class="text-gray-600 text-sm mb-4">Sacramental and liturgical theology</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Liturgical Principles</li>
+                        <li>• Sacramental Theology</li>
+                        <li>• Eucharistic Theology</li>
+                        <li>• Liturgical Year</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                    <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Pastoral Theology</h3>
+                    <p class="text-gray-600 text-sm mb-4">Practical ministry and pastoral care</p>
+                    <ul class="text-sm text-gray-500 space-y-1">
+                        <li>• Pastoral Counseling</li>
+                        <li>• Homiletics</li>
+                        <li>• Parish Administration</li>
+                        <li>• Spiritual Direction</li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Faculty Section -->
+{% if faculty %}
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold font-serif text-gray-800 mb-4">Our Faculty</h2>
+                <p class="text-gray-600 text-lg">Distinguished scholars and experienced educators</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for member in faculty %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover-lift">
+                    <div class="relative">
+                        {% if member.photo %}
+                        <img src="{{ member.photo.url }}" alt="{{ member.name }}" 
+                             class="w-full h-64 object-cover">
+                        {% else %}
+                        <div class="w-full h-64 bg-gradient-tertiary flex items-center justify-center">
+                            <i class="fas fa-user text-6xl text-white"></i>
+                        </div>
+                        {% endif %}
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">{{ member.name }}</h3>
+                        <p class="text-blue-600 font-medium mb-3">{{ member.title }}</p>
+                        <p class="text-gray-600 text-sm leading-relaxed">{{ member.bio|truncatewords:20 }}</p>
+                        {% if member.specialization %}
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            {% for spec in member.specializations_list %}
+                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">{{ spec }}</span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Mission & Vision -->
+<section class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-bullseye text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold font-serif text-gray-800">Our Mission</h3>
+                    </div>
+                    {% if department_name == 'Philosophy' %}
+                    <p class="text-gray-600 leading-relaxed">
+                        To provide foundational philosophical education that enables students to engage critically with fundamental questions about existence, knowledge, ethics, and human nature, preparing them for advanced theological studies and lifelong intellectual growth.
+                    </p>
+                    {% else %}
+                    <p class="text-gray-600 leading-relaxed">
+                        To offer rigorous theological education rooted in Catholic tradition while engaging with contemporary challenges, preparing future priests and religious leaders for pastoral ministry and scholarly pursuits in service to the Church and society.
+                    </p>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-8">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-eye text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold font-serif text-gray-800">Our Vision</h3>
+                    </div>
+                    {% if department_name == 'Philosophy' %}
+                    <p class="text-gray-600 leading-relaxed">
+                        To be recognized as a center of excellence in philosophical education that integrates classical wisdom with contemporary insights, fostering critical thinkers who can contribute meaningfully to theological discourse and societal dialogue.
+                    </p>
+                    {% else %}
+                    <p class="text-gray-600 leading-relaxed">
+                        To be recognized as a leading institution of theological education that forms competent, compassionate, and committed priests and religious leaders who can effectively serve the diverse needs of the modern Church and society.
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-16 bg-gradient-primary text-white">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-bold font-serif mb-4">Ready to Begin Your Journey?</h2>
+            <p class="text-xl opacity-90 mb-8">
+                {% if department_name == 'Philosophy' %}
+                Explore the depths of human reason and prepare for advanced theological studies.
+                {% else %}
+                Deepen your faith and prepare for a life of service to the Church and society.
+                {% endif %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'contact' %}" 
+                   class="inline-block px-8 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+                    Contact Us
+                </a>
+                <a href="{% url 'hsit_about' %}" 
+                   class="inline-block px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-colors">
+                    Learn More About HSIT
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.eggs/
+*.egg-info/
+dist/
+.dist/
+build/
+*.so
+*.pot
+*.mo
+
+# Django
+*.log
+logs/
+db.sqlite3
+media/
+staticfiles/
+hsms/.env
+
+# macOS
+.DS_Store

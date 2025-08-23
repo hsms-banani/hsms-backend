@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block title %}{{ gallery.title }} - Gallery - Holy Spirit Major Seminary{% endblock %}
+
+{% block meta_description %}{{ gallery.description|truncatewords:30|default:"View gallery images and videos from Holy Spirit Major Seminary" }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-primary text-white py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center animate-fade-in-up">
+            <div class="inline-block px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-4">
+                {% if gallery.gallery_type == 'video' %}
+                    <i class="fas fa-video mr-2"></i>Video Gallery
+                {% else %}
+                    <i class="fas fa-images mr-2"></i>Photo Gallery
+                {% endif %}
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold font-serif mb-4">{{ gallery.title }}</h1>
+            {% if gallery.description %}
+                <p class="text-xl opacity-90 max-w-3xl mx-auto mb-6">{{ gallery.description }}</p>
+            {% endif %}
+            <div class="flex items-center justify-center space-x-6 text-sm opacity-90">
+                <span><i class="fas fa-calendar mr-2"></i>{{ gallery.created_at|date:"F d, Y" }}</span>
+                <span><i class="fas fa-images mr-2"></i>{{ items.count }} item{{ items.count|pluralize }}</span>
+            </div>
+            <nav class="mt-6">
+                <ol class="flex items-center justify-center space-x-2 text-sm">
+                    <li><a href="{% url 'home' %}" class="hover:text-blue-200 transition-colors">Home</a></li>
+                    <li><i class="fas fa-chevron-right mx-2"></i></li>
+                    <li><a href="{% url 'gallery_list' %}" class="hover:text-blue-200 transition-colors">Gallery</a></li>
+                    <li><i class="fas fa-chevron-right mx-2"></i></li>
+                    <li class="opacity-75">{{ gallery.title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Actions -->
+<section class="py-8 bg-white shadow-sm">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'gallery_list' %}" 
+                   class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Gallery
+                </a>
+                
+                {% if gallery.gallery_type == 'photo' %}
+                    <button onclick="startSlideshow()" 
+                            class="inline-flex items-center px-4 py-2 bg-gradient-primary text-white rounded-lg hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-play mr-2"></i>Start Slideshow
+                    </button>
+                {% endif %}
+            </div>
+            
+            <div class="text-sm text-gray-600">
+                {{ items.count }} item{{ items.count|pluralize }} in this gallery
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Items -->
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        {% if items %}
+            {% if gallery.gallery_type == 'photo' %}
+                <!-- Photo Gallery - Masonry Layout -->
+                <div class="masonry-grid" id="photo-gallery">
+                    {% for item in items %}
+                        <div class="masonry-item">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift cursor-pointer"
+                                 onclick="openLightbox('{{ item.image.url }}', '{{ item.title|escapejs }}', '{{ item.description|escapejs }}', {{ forloop.counter0 }})">
+                                {% if item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.title|default:'Gallery Image' }}" 
+                                         class="w-full h-auto object-cover">
+                                {% endif %}
+                                {% if item.title or item.description %}
+                                    <div class="p-4">
+                                        {% if item.title %}
+                                            <h3 class="font-semibold text-gray-800 mb-1">{{ item.title }}</h3>
+                                        {% endif %}
+                                        {% if item.description %}
+                                            <p class="text-sm text-gray-600">{{ item.description|truncatewords:15 }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <!-- Video Gallery - Grid Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {% for item in items %}
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-lift">
+                            <div class="relative">
+                                {% if item.video_url %}
+                                    <!-- Embed Video -->
+                                    <div class="aspect-video">
+                                        {% if 'youtube.com' in item.video_url or 'youtu.be' in item.video_url %}
+                                            <iframe class="w-full h-full" 
+                                                    src="https://www.youtube.com/embed/{{ item.video_url|youtube_id }}" 
+                                                    frameborder="0" 
+                                                    allowfullscreen></iframe>
+                                        {% elif 'vimeo.com' in item.video_url %}
+                                            <iframe class="w-full h-full" 
+                                                    src="https://player.vimeo.com/video/{{ item.video_url|vimeo_id }}" 
+                                                    frameborder="0" 
+                                                    allowfullscreen></iframe>
+                                        {% else %}
+                                            <div class="w-full h-full bg-gray-200 flex items-center justify-center">
+                                                <a href="{{ item.video_url }}" target="_blank" 
+                                                   class="inline-flex items-center px-4 py-2 bg-gradient-primary text-white rounded-lg">
+                                                    <i class="fas fa-external-link-alt mr-2"></i>Watch Video
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% elif item.video_file %}
+                                    <video controls class="w-full h-64 object-cover">
+                                        <source src="{{ item.video_file.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% elif item.image %}
+                                    <img src="{{ item.image.url }}" alt="{{ item.title|default:'Video Thumbnail' }}" 
+                                         class="w-full h-64 object-cover">
+                                {% endif %}
+                            </div>
+                            
+                            {% if item.title or item.description %}
+                                <div class="p-6">
+                                    {% if item.title %}
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ item.title }}</h3>
+                                    {% endif %}
+                                    {% if item.description %}
+                                        <p class="text-gray-600 text-sm">{{ item.description }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-16">
+                <div class="max-w-md mx-auto">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        {% if gallery.gallery_type == 'video' %}
+                            <i class="fas fa-video text-gray-400 text-3xl"></i>
+                        {% else %}
+                            <i class="fas fa-images text-gray-400 text-3xl"></i>
+                        {% endif %}
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-3">No Items Found</h3>
+                    <p class="text-gray-600 mb-6">This gallery is currently empty.</p>
+                    <a href="{% url 'gallery_list' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Gallery
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Lightbox Modal for Photos -->
+{% if gallery.gallery_type == 'photo' %}
+<div id="lightbox" class="fixed inset-0 bg-black bg-opacity-95 hidden z-50 flex items-center justify-center p-4">
+    <div class="relative max-w-6xl max-h-full w-full">
+        <!-- Close Button -->
+        <button onclick="closeLightbox()" class="absolute top-4 right-4 text-white text-2xl hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center">
+            <i class="fas fa-times"></i>
+        </button>
+        
+        <!-- Navigation Buttons -->
+        <button onclick="previousImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button onclick="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-2xl hover:text-gray-300 z-10 bg-black bg-opacity-50 rounded-full w-12 h-12 flex items-center justify-center">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Image -->
+        <img id="lightboxImage" src="" alt="" class="max-w-full max-h-full object-contain mx-auto">
+        
+        <!-- Caption -->
+        <div id="lightboxCaption" class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-75 text-white p-6">
+            <h3 id="lightboxTitle" class="text-xl font-semibold mb-2"></h3>
+            <p id="lightboxDescription" class="text-sm opacity-90"></p>
+            <div class="mt-2 text-xs opacity-75">
+                <span id="lightboxCounter"></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .masonry-grid {
+        column-count: 1;
+        column-gap: 1.5rem;
+    }
+
+    @media (min-width: 640px) {
+        .masonry-grid {
+            column-count: 2;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .masonry-grid {
+            column-count: 3;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .masonry-grid {
+            column-count: 4;
+        }
+    }
+
+    .masonry-item {
+        break-inside: avoid;
+        margin-bottom: 1.5rem;
+    }
+
+    .hover-lift {
+        transition: all 0.3s ease;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentImageIndex = 0;
+    const images = [
+        {% for item in items %}
+            {% if item.image %}
+                {
+                    src: '{{ item.image.url }}',
+                    title: '{{ item.title|escapejs }}',
+                    description: '{{ item.description|escapejs }}'
+                }{% if not forloop.last %},{% endif %}
+            {% endif %}
+        {% endfor %}
+    ];
+
+    function openLightbox(src, title, description, index) {
+        currentImageIndex = index;
+        updateLightboxContent();
+        document.getElementById('lightbox').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    function nextImage() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        updateLightboxContent();
+    }
+
+    function previousImage() {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        updateLightboxContent();
+    }
+
+    function updateLightboxContent() {
+        const image = images[currentImageIndex];
+        document.getElementById('lightboxImage').src = image.src;
+        document.getElementById('lightboxTitle').textContent = image.title;
+        document.getElementById('lightboxDescription').textContent = image.description;
+        document.getElementById('lightboxCounter').textContent = `${currentImageIndex + 1} of ${images.length}`;
+    }
+
+    function startSlideshow() {
+        if (images.length > 0) {
+            openLightbox(images[0].src, images[0].title, images[0].description, 0);
+            // Auto-advance every 5 seconds
+            let slideshowInterval = setInterval(() => {
+                nextImage();
+            }, 5000);
+            
+            // Stop slideshow when lightbox is closed
+            const lightbox = document.getElementById('lightbox');
+            const observer = new MutationObserver(() => {
+                if (lightbox.classList.contains('hidden')) {
+                    clearInterval(slideshowInterval);
+                }
+            });
+            observer.observe(lightbox, { attributes: true, attributeFilter: ['class'] });
+        }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+        const lightbox = document.getElementById('lightbox');
+        if (!lightbox.classList.contains('hidden')) {
+            switch(e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    previousImage();
+                    break;
+                case 'ArrowRight':
+                case ' ':
+                    nextImage();
+                    break;
+            }
+        }
+    });
+
+    // Close lightbox on background click
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeLightbox();
+        }
+    });
+</script>
+{% endblock %}

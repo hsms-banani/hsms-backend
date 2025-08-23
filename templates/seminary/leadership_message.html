@@ -1,0 +1,437 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ leadership_message.title }} - Holy Spirit Major Seminary{% endblock %}
+
+{% block meta_description %}{{ leadership_message.meta_description|default:leadership_message.message_content|striptags|truncatewords:20 }}{% endblock %}
+
+{% block extra_css %}
+<!-- Consistent Styles CSS -->
+<link rel="stylesheet" href="{% static 'css/consistent-styles.css' %}">
+
+<style>
+/* Leadership Message Specific Styles */
+.leadership-hero {
+    position: relative;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    overflow: hidden;
+}
+
+.leadership-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('{% if leadership_message.background_image %}{{ leadership_message.background_image.url }}{% else %}{% static "images/seminary-bg.jpg" %}{% endif %}');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.leadership-hero > * {
+    position: relative;
+    z-index: 2;
+}
+
+.leader-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.leader-photo {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 6px solid white;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.3s ease;
+}
+
+.leader-photo:hover {
+    transform: scale(1.05);
+}
+
+.quote-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-left: 6px solid #667eea;
+    position: relative;
+}
+
+.quote-section::before {
+    content: '"';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    font-size: 4rem;
+    color: #667eea;
+    opacity: 0.3;
+    font-family: 'Playfair Display', serif;
+}
+
+.message-content {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.8;
+    color: #374151;
+}
+
+.message-content h1,
+.message-content h2,
+.message-content h3,
+.message-content h4,
+.message-content h5,
+.message-content h6 {
+    font-family: 'Playfair Display', serif;
+    color: #1f2937;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.message-content h2 {
+    font-size: 1.875rem;
+    color: #4f46e5;
+    border-left: 4px solid #667eea;
+    padding-left: 1rem;
+    margin-left: -1rem;
+}
+
+.message-content h3 {
+    font-size: 1.5rem;
+    color: #6366f1;
+}
+
+.message-content p {
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    font-size: 1.125rem;
+    text-indent: 2rem;
+}
+
+.message-content p:first-child {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: #4b5563;
+    text-indent: 0;
+}
+
+.message-content ul,
+.message-content ol {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+}
+
+.message-content li {
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+}
+
+.message-content blockquote {
+    border-left: 4px solid #667eea;
+    padding-left: 2rem;
+    margin: 2rem 0;
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #4b5563;
+    background-color: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-radius: 0.75rem;
+}
+
+.message-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+}
+
+.signature-section {
+    border-top: 2px solid #e5e7eb;
+    background: linear-gradient(to right, #f9fafb, #ffffff);
+}
+
+.cta-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: float 15s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+.leadership-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .leader-card {
+        padding: 1.5rem;
+        margin: 1rem;
+    }
+    
+    .leader-photo {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .message-content p {
+        text-indent: 1rem;
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="leadership-page-wrapper">
+    <!-- Hero Section with Leader Introduction -->
+    <section class="leadership-hero py-20 min-h-screen flex items-center">
+        <div class="container mx-auto px-4">
+            <div class="max-w-6xl mx-auto">
+                <!-- Breadcrumb -->
+                <nav class="text-lg text-white opacity-90 mb-8">
+                    {% for breadcrumb_title, breadcrumb_url in breadcrumbs %}
+                        {% if breadcrumb_url %}
+                            <a href="{% url breadcrumb_url %}" class="hover:text-blue-200 transition-colors">{{ breadcrumb_title }}</a>
+                        {% else %}
+                            <span>{{ breadcrumb_title }}</span>
+                        {% endif %}
+                        {% if not forloop.last %}<span class="mx-3">/</span>{% endif %}
+                    {% endfor %}
+                </nav>
+                
+                <div class="leader-card">
+                    <div class="flex flex-col lg:flex-row items-center gap-8">
+                        <!-- Leader Photo -->
+                        <div class="text-center lg:text-left">
+                            {% if leadership_message.leader_photo %}
+                            <img src="{{ leadership_message.leader_photo.url }}" 
+                                 alt="{{ leadership_message.leader_name }}" 
+                                 class="leader-photo mx-auto lg:mx-0">
+                            {% else %}
+                            <div class="leader-photo mx-auto lg:mx-0 bg-gray-200 flex items-center justify-center">
+                                <i class="fas fa-user text-6xl text-gray-400"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Leader Info and Quote -->
+                        <div class="flex-1 text-center lg:text-left">
+                            <h1 class="text-4xl lg:text-5xl font-bold font-serif text-gray-800 mb-2">
+                                {{ leadership_message.title }}
+                            </h1>
+                            <h2 class="text-2xl font-semibold text-gray-700 mb-2">
+                                {{ leadership_message.leader_name }}
+                            </h2>
+                            <p class="text-xl text-gray-600 mb-6">
+                                {{ leadership_message.leader_title }}
+                            </p>
+                            
+                            {% if leadership_message.quote %}
+                            <div class="quote-section p-6 rounded-lg">
+                                <blockquote class="text-xl font-medium text-gray-700 italic leading-relaxed">
+                                    {{ leadership_message.quote|safe|striptags }}
+                                </blockquote>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Message Content Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="message-content prose prose-lg max-w-none">
+                    {{ leadership_message.message_content|safe }}
+                </div>
+                
+                <!-- Signature Section -->
+                <div class="signature-section mt-12 pt-8 text-center">
+                    <div class="inline-block">
+                        <p class="text-lg font-semibold text-gray-800">{{ leadership_message.leader_name }}</p>
+                        <p class="text-gray-600">{{ leadership_message.leader_title }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section py-16 text-white text-center">
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold font-serif mb-8">Explore More</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% if leadership_message.message_type == 'rector' %}
+                    <a href="{% url 'about_seminary' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-church"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">About Seminary</h3>
+                        <p class="text-sm opacity-90">Learn about our history, mission, and vision</p>
+                    </a>
+                    
+                    <a href="{% url 'faculty_list' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Our Faculty</h3>
+                        <p class="text-sm opacity-90">Meet our dedicated teachers and mentors</p>
+                    </a>
+                    
+                    <a href="{% url 'formation_program' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Formation Program</h3>
+                        <p class="text-sm opacity-90">Discover our comprehensive formation journey</p>
+                    </a>
+                    {% elif leadership_message.message_type == 'director' %}
+                    <a href="{% url 'hsit_about' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">About HSIT</h3>
+                        <p class="text-sm opacity-90">Learn about our academic institution</p>
+                    </a>
+                    
+                    <a href="{% url 'faculty_list' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Faculty</h3>
+                        <p class="text-sm opacity-90">Meet our academic faculty members</p>
+                    </a>
+                    
+                    <a href="{% url 'publications' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Publications</h3>
+                        <p class="text-sm opacity-90">Explore our academic publications</p>
+                    </a>
+                    {% else %}
+                    <!-- Spiritual Director specific links -->
+                    <a href="{% url 'spiritual_food' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-dove"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Spiritual Food</h3>
+                        <p class="text-sm opacity-90">Nourishment for the soul and spirit</p>
+                    </a>
+                    
+                    <a href="{% url 'prayer_services' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-praying-hands"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Prayer Services</h3>
+                        <p class="text-sm opacity-90">Join us in prayer and worship</p>
+                    </a>
+                    
+                    <a href="{% url 'homilies' %}" 
+                       class="block p-6 bg-white bg-opacity-10 rounded-lg backdrop-filter backdrop-blur-lg hover:bg-opacity-20 transition-all duration-300 hover:transform hover:scale-105">
+                        <div class="w-12 h-12 bg-white bg-opacity-20 text-white rounded-lg flex items-center justify-center mb-4 mx-auto">
+                            <i class="fas fa-cross"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">Homilies</h3>
+                        <p class="text-sm opacity-90">Reflections on Scripture and faith</p>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scrolling for any anchor links
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Add parallax effect to hero section
+    window.addEventListener('scroll', function() {
+        const heroSection = document.querySelector('.leadership-hero');
+        if (heroSection) {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            heroSection.style.transform = `translateY(${rate}px)`;
+        }
+    });
+    
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    document.querySelectorAll('.message-content > *').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+});
+</script>
+{% endblock %}

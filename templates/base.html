@@ -1,0 +1,732 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Holy Spirit Major Seminary{% endblock %} | {{ site_settings.site_name }}</title>
+    <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description|default:'Holy Spirit Major Seminary - Dedicated for Service. Formation in Philosophy and Theology in Dhaka, Bangladesh.' }}{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}{{ site_settings.meta_keywords|default:'Holy Spirit Major Seminary, Banani, Seminary, Catholic, Dhaka, Bangladesh, Philosophy, Theology' }}{% endblock %}">
+    <meta name="author" content="Holy Spirit Major Seminary">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}{{ block.super }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ block.super }}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{% static 'img/logo-white-bg.jpg' %}{% endblock %}">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta property="twitter:title" content="{% block twitter_title %}{{ block.super }}{% endblock %}">
+    <meta property="twitter:description" content="{% block twitter_description %}{{ block.super }}{% endblock %}">
+    <meta property="twitter:image" content="{% block twitter_image %}{% static 'img/logo-white-bg.jpg' %}{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    
+    <!-- Alpine.js -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Critical CSS - Inline for better performance -->
+    <style>
+        /* CSS Reset and Base Styles */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            line-height: 1.6;
+            color: #374151;
+            background-color: #f9fafb;
+        }
+        
+        .font-serif { 
+            font-family: 'Playfair Display', serif; 
+        }
+        
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .animate-fade-in-up { 
+            animation: fadeInUp 0.6s ease-out; 
+        }
+        
+        .animate-fade-in { 
+            animation: fadeIn 0.4s ease-out; 
+        }
+        
+        /* Gradient backgrounds - Fixed and consistent */
+        .bg-gradient-primary { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+        }
+        
+        .bg-gradient-secondary { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+            color: white !important;
+        }
+        
+        .bg-gradient-tertiary { 
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+            color: white !important;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #667eea; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5a6fd8; }
+        
+        /* Glass morphism effect */
+        .glass { 
+            background: rgba(255, 255, 255, 0.25) !important;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+        }
+        
+        /* Hover effects - Consistent across all pages */
+        .hover-lift { 
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important; 
+        }
+        
+        .hover-lift:hover { 
+            transform: translateY(-5px) !important; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important; 
+        }
+        
+        /* Navigation styles - Fixed and consistent */
+        .nav-link { 
+            position: relative; 
+            transition: all 0.3s ease !important;
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white !important;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, #667eea, #764ba2) !important;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover,
+        .nav-link:focus {
+            background-color: rgba(55, 65, 81, 0.8) !important;
+            color: white !important;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        /* Dropdown menu styles - Fixed positioning and styling */
+        .dropdown-menu {
+            transform: translateY(-10px) scale(0.95);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            top: 100%;
+            margin-top: 0;
+            z-index: 1000;
+            background: white !important;
+            color: #374151 !important;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 0 !important;
+            min-width: 16rem;
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown .dropdown-menu:hover {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-menu a {
+            display: block !important;
+            padding: 0.5rem 1rem !important;
+            color: #374151 !important;
+            text-decoration: none !important;
+            transition: all 0.2s ease !important;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu a:focus {
+            background-color: #f3f4f6 !important;
+            color: #1f2937 !important;
+        }
+
+        /* Add bridge to prevent hover break */
+        .dropdown::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: transparent;
+            z-index: 999;
+        }
+
+        /* Mobile menu styles - Consistent */
+        .mobile-menu-container {
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: #374151 !important;
+        }
+
+        /* Header styles - Force consistency */
+        .top-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+        }
+
+        .main-header {
+            background-color: white !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        .main-nav {
+            background-color: #374151 !important;
+            color: white !important;
+        }
+
+        /* Footer styles - Force consistency */
+        .main-footer {
+            background-color: #111827 !important;
+            color: white !important;
+        }
+
+        .main-footer h3,
+        .main-footer h4 {
+            color: #f9fafb !important;
+        }
+
+        .main-footer a {
+            color: #d1d5db !important;
+            transition: color 0.3s ease !important;
+        }
+
+        .main-footer a:hover {
+            color: white !important;
+        }
+
+        /* Override any conflicting styles from rich content */
+        .rich-content h1,
+        .rich-content h2,
+        .rich-content h3,
+        .rich-content h4,
+        .rich-content h5,
+        .rich-content h6 {
+            color: #1f2937 !important;
+        }
+
+        /* Ensure consistent button styling */
+        .btn-department {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transition: all 0.3s ease !important;
+        }
+
+        .btn-department::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            z-index: -1;
+            transition: left 0.5s;
+        }
+
+        .btn-department:hover::before {
+            left: 100%;
+        }
+
+        /* Ensure back to top button consistency */
+        #backToTop {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+        }
+
+        /* Force consistent styling across all pages */
+        body * {
+            box-sizing: border-box;
+        }
+
+        /* Prevent style inheritance issues */
+        .content-wrapper {
+            isolation: isolate;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-800">
+    <!-- Top Header - Fixed styling -->
+    <div class="top-header text-white py-2 text-sm">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <span><i class="fas fa-map-marker-alt mr-1"></i> Banani, Dhaka, Bangladesh</span>
+                <span class="hidden sm:inline"><i class="fas fa-envelope mr-1"></i>hsmsmajorseminary@gmail.com</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#" class="bg-white/20 px-3 py-1 rounded-full text-sm hover:bg-white/30 transition-colors">
+                    <i class="fas fa-sign-in-alt mr-1"></i> Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header - Fixed styling -->
+    <header class="main-header sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <!-- Logo and Seminary Name -->
+                <div class="flex items-center space-x-4">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <img src="{% static 'img/logo.png' %}" 
+                            alt="Holy Spirit Major Seminary Logo" 
+                            class="w-12 h-12 md:w-16 md:h-16 object-contain">
+                    </div>
+
+                    <!-- Name and Tagline -->
+                    <div>
+                        <h1 class="text-lg md:text-2xl font-bold text-gray-800 font-serif">
+                            Holy Spirit Major Seminary
+                        </h1>
+                        <p class="text-xs md:text-sm text-gray-600 italic">
+                            Dedicated for Service
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Search Bar -->
+                <div class="hidden lg:block">
+                    <div class="relative" x-data="{ showResults: false }">
+                        <input 
+                            name="q"
+                            type="text" 
+                            placeholder="Search..." 
+                            class="w-80 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            hx-get="{% url 'search' %}"
+                            hx-trigger="keyup changed delay:300ms"
+                            hx-target="#search-results"
+                            @focus="showResults = true"
+                            @blur="setTimeout(() => showResults = false, 200)"
+                        >
+                        <div id="search-results" 
+                             class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-96 overflow-y-auto z-50"
+                             x-show="showResults"
+                             x-transition
+                             style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden" 
+                        x-data 
+                        @click="$dispatch('toggle-mobile-menu')"
+                        @click.stop>
+                    <i class="fas fa-bars text-2xl text-gray-700"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation Menu - Fixed styling -->
+        <nav class="main-nav" 
+             x-data="{ mobileMenuOpen: false }" 
+             @toggle-mobile-menu.window="mobileMenuOpen = !mobileMenuOpen"
+             @click.outside="mobileMenuOpen = false">
+            <div class="container mx-auto px-4">
+                <!-- Desktop Menu -->
+                <ul class="hidden md:flex space-x-1">
+                    <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+                    
+                    <!-- Our Seminary Dropdown -->
+                    <li class="relative dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                        <a href="#" class="nav-link flex items-center">
+                            Our Seminary <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </a>
+                        <div class="dropdown-menu absolute left-0">
+                            <a href="{% url 'rector_welcome' %}">Rector's Welcome</a>
+                            <a href="{% url 'mission_vision' %}">Mission & Vision</a>
+                            <a href="{% url 'seminary_history' %}">History</a>
+                            <a href="{% url 'formation_program' %}">Formation Program</a>
+                            <a href="{% url 'rules_regulations' %}">Rules & Regulations</a>
+                            <a href="{% url 'committees' %}">Committees</a>
+                        </div>
+                    </li>
+                    
+                    <!-- History & Heritage Dropdown -->
+                    <li class="relative dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                        <a href="{% url 'history_heritage' %}" class="nav-link flex items-center">
+                            History & Heritage <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </a>
+                        <div class="dropdown-menu absolute left-0">
+                            <a href="{% url 'church_history' %}">Brief History of the Church</a>
+                            <a href="{% url 'bangladesh_history' %}">History of Bangladesh</a>
+                            <a href="{% url 'local_church_history' %}">Local Church History</a>
+                        </div>
+                    </li>
+                    
+                    <!-- HSIT Dropdown -->
+                    <li class="relative dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                        <a href="{% url 'hsit_about' %}" class="nav-link flex items-center">
+                            About HSIT <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </a>
+                        <div class="dropdown-menu absolute left-0">
+                            <a href="{% url 'director_message' %}">Director's Message</a>
+                            <a href="{% url 'philosophy_department' %}">Department of Philosophy</a>
+                            <a href="{% url 'theology_department' %}">Department of Theology</a>
+                            <a href="{% url 'faculty_list' %}">Faculty</a>
+                            <a href="{% url 'academic_calendar' %}">Academic Calendar</a>
+                            <a href="{% url 'library' %}">Library</a>
+                        </div>
+                    </li>
+                    
+                    <li><a href="{% url 'publications' %}" class="nav-link">Publications</a></li>
+                    
+                    <!-- Spiritual Food Dropdown -->
+                    <li class="relative dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                        <a href="{% url 'spiritual_food' %}" class="nav-link flex items-center">
+                            Spiritual Food <i class="fas fa-chevron-down ml-1 text-xs transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                        </a>
+                        <div class="dropdown-menu absolute left-0">
+                            <a href="{% url 'prayer_services' %}">Prayer Services</a>
+                            <a href="{% url 'homilies' %}">Homilies</a>
+                            <a href="{% url 'spiritual_directors_desk' %}">Spiritual Director's Desk</a>
+                        </div>
+                    </li>
+                    
+                    <li><a href="{% url 'events_list' %}" class="nav-link">Events</a></li>
+                    <li><a href="{% url 'gallery_list' %}" class="nav-link">Gallery</a></li>
+                    <li><a href="{% url 'contact' %}" class="nav-link">Contact</a></li>
+                </ul>
+
+                <!-- Mobile Menu - Fixed styling -->
+                <div x-show="mobileMenuOpen" 
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 transform -translate-y-2"
+                    x-transition:enter-end="opacity-100 transform translate-y-0"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 transform translate-y-0"
+                    x-transition:leave-end="opacity-0 transform -translate-y-2"
+                    class="md:hidden py-4 mobile-menu-container"
+                    @click.stop>
+                    <div class="space-y-2">
+                        <!-- Home -->
+                        <a href="{% url 'home' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Home</a>
+                        
+                        <!-- Our Seminary Mobile Dropdown -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" class="w-full text-left px-4 py-2 hover:bg-gray-700 rounded flex items-center justify-between transition-colors text-white">
+                                Our Seminary 
+                                <i class="fas fa-chevron-down transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                            </button>
+                            <div x-show="open" class="ml-4 space-y-1 overflow-hidden">
+                                <a href="{% url 'rector_welcome' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Rector's Welcome</a>
+                                <a href="{% url 'mission_vision' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Mission & Vision</a>
+                                <a href="{% url 'seminary_history' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">History</a>
+                                <a href="{% url 'formation_program' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Formation Program</a>
+                                <a href="{% url 'rules_regulations' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Rules & Regulations</a>
+                                <a href="{% url 'committees' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Committees</a>
+                            </div>
+                        </div>
+                        
+                        <!-- History & Heritage Mobile Dropdown -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" class="w-full text-left px-4 py-2 hover:bg-gray-700 rounded flex items-center justify-between transition-colors text-white">
+                                History & Heritage 
+                                <i class="fas fa-chevron-down transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                            </button>
+                            <div x-show="open" class="ml-4 space-y-1 overflow-hidden">
+                                <a href="{% url 'church_history' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Brief History of the Church</a>
+                                <a href="{% url 'bangladesh_history' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">History of Bangladesh</a>
+                                <a href="{% url 'local_church_history' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Local Church History</a>
+                            </div>
+                        </div>
+
+                        <!-- About HSIT Mobile Dropdown -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" class="w-full text-left px-4 py-2 hover:bg-gray-700 rounded flex items-center justify-between transition-colors text-white">
+                                About HSIT 
+                                <i class="fas fa-chevron-down transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                            </button>
+                            <div x-show="open" class="ml-4 space-y-1 overflow-hidden">
+                                <a href="{% url 'director_message' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Director's Message</a>
+                                <a href="{% url 'philosophy_department' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Department of Philosophy</a>
+                                <a href="{% url 'theology_department' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Department of Theology</a>
+                                <a href="{% url 'faculty_list' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Faculty</a>
+                                <a href="{% url 'academic_calendar' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Academic Calendar</a>
+                                <a href="{% url 'library' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Library</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Publications -->
+                        <a href="{% url 'publications' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Publications</a>
+
+                        <!-- Spiritual Food Mobile Dropdown -->
+                        <div x-data="{ open: false }">
+                            <button @click="open = !open" class="w-full text-left px-4 py-2 hover:bg-gray-700 rounded flex items-center justify-between transition-colors text-white">
+                                Spiritual Food 
+                                <i class="fas fa-chevron-down transition-transform duration-200" :class="{ 'rotate-180': open }"></i>
+                            </button>
+                            <div x-show="open" class="ml-4 space-y-1 overflow-hidden">
+                                <a href="{% url 'prayer_services' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Prayer Services</a>
+                                <a href="{% url 'homilies' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Homilies</a>
+                                <a href="{% url 'spiritual_directors_desk' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Spiritual Director's Desk</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Events -->
+                        <a href="{% url 'events_list' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Events</a>
+                        
+                        <!-- Gallery -->
+                        <a href="{% url 'gallery_list' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Gallery</a>
+                        
+                        <!-- Contact -->
+                        <a href="{% url 'contact' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Contact</a>
+
+                        <!-- Mobile Search -->
+                        <div class="px-4 py-2 lg:hidden">
+                            <div class="relative" x-data="{ showResults: false }">
+                                <input 
+                                    name="q"
+                            type="text" 
+                                    placeholder="Search..." 
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800"
+                                    hx-get="{% url 'search' %}"
+                                    hx-trigger="keyup changed delay:300ms"
+                                    hx-target="#mobile-search-results"
+                                    @focus="showResults = true"
+                                    @blur="setTimeout(() => showResults = false, 200)"
+                                >
+                                <div id="mobile-search-results" 
+                                     class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-96 overflow-y-auto z-50 text-gray-800"
+                                     x-show="showResults"
+                                     x-transition
+                                     style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="content-wrapper">
+        {% if messages %}
+            <div class="container mx-auto px-4 py-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer - Fixed styling -->
+    <footer class="main-footer mt-16">
+        <div class="container mx-auto px-4 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Seminary Info -->
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <!-- Logo -->
+                        <div class="flex-shrink-0">
+                            <img src="{% static 'img/logo-white-bg.jpg' %}" 
+                                alt="Holy Spirit Major Seminary Logo" 
+                                class="w-10 h-10 md:w-12 md:h-12 object-contain">
+                        </div>
+
+                        <!-- Name and Tagline -->
+                        <div>
+                            <h3 class="text-lg md:text-xl font-bold font-serif text-gray-100">
+                                Holy Spirit Major Seminary
+                            </h3>
+                            <p class="text-gray-400 text-sm">
+                                Dedicated for Service
+                            </p>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        Holy Spirit Major Seminary is committed to forming future priests and religious through comprehensive education in Philosophy and Theology, fostering spiritual growth and service to the Church and society.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'about_seminary' %}" class="text-gray-300 hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="{% url 'faculty_list' %}" class="text-gray-300 hover:text-white transition-colors">Faculty</a></li>
+                        <li><a href="{% url 'hsit_about' %}" class="text-gray-300 hover:text-white transition-colors">HSIT</a></li>
+                        <li><a href="{% url 'publications' %}" class="text-gray-300 hover:text-white transition-colors">Publications</a></li>
+                        <li><a href="{% url 'events_list' %}" class="text-gray-300 hover:text-white transition-colors">Events</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-300 hover:text-white transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <i class="fas fa-map-marker-alt text-blue-400 mt-1"></i>
+                            <div>
+                                <p class="text-gray-300">Holy Spirit Major Seminary</p>
+                                <p class="text-gray-300">Block A-112, Road 27, Banani, Dhaka 1213</p>
+                                <p class="text-gray-300">Bangladesh</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-envelope text-blue-400"></i>
+                            <p class="text-gray-300">hsmsmajorseminary@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; <span id="currentYear">2025</span> Holy Spirit Major Seminary. All rights reserved. | 
+                    <a href="{% url 'privacy_policy' %}" class="hover:text-white transition-colors">Privacy Policy</a> | 
+                    <a href="{% url 'terms_of_service' %}" class="hover:text-white transition-colors">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button 
+        id="backToTop" 
+        class="fixed bottom-6 right-6 w-12 h-12 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 opacity-0 invisible hover:scale-110"
+        onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+    >
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Core JavaScript -->
+    <script>
+        // Dynamic copyright year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Back to top button functionality
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('backToTop');
+            if (window.pageYOffset > 300) {
+                button.classList.remove('opacity-0', 'invisible');
+                button.classList.add('opacity-100', 'visible');
+            } else {
+                button.classList.add('opacity-0', 'invisible');
+                button.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // HTMX configuration
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (csrfToken) {
+                evt.detail.headers['X-CSRFToken'] = csrfToken.value;
+            }
+        });
+
+        // Prevent style conflicts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force consistent header/nav/footer styling
+            const topHeader = document.querySelector('.top-header');
+            const mainHeader = document.querySelector('.main-header');
+            const mainNav = document.querySelector('.main-nav');
+            const mainFooter = document.querySelector('.main-footer');
+            
+            if (topHeader) {
+                topHeader.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; color: white !important;';
+            }
+            
+            if (mainHeader) {
+                mainHeader.style.cssText = 'background-color: white !important; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;';
+            }
+            
+            if (mainNav) {
+                mainNav.style.cssText = 'background-color: #374151 !important; color: white !important;';
+            }
+            
+            if (mainFooter) {
+                mainFooter.style.cssText = 'background-color: #111827 !important; color: white !important;';
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

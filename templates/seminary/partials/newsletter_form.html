@@ -1,0 +1,13 @@
+<!-- templates/seminary/partials/newsletter_form.html -->
+<form hx-post="{% url 'newsletter_signup' %}" hx-target="#newsletter-response" class="max-w-md mx-auto flex">
+    {% csrf_token %}
+    <input type="email" name="email" placeholder="Enter your email address" 
+           class="flex-1 px-4 py-3 rounded-l-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-white {% if form.email.errors %}border-red-500{% endif %}" 
+           value="{{ form.email.value|default:'' }}" required>
+    <button type="submit" class="bg-white text-blue-600 px-6 py-3 rounded-r-lg font-semibold hover:bg-gray-100 transition-colors">
+        Subscribe
+    </button>
+</form>
+{% if form.email.errors %}
+<p class="mt-2 text-sm text-red-200">{{ form.email.errors.0 }}</p>
+{% endif %}

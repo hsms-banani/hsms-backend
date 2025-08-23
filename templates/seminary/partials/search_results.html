@@ -1,0 +1,48 @@
+<!-- templates/seminary/partials/search_results.html -->
+{% load custom_filters %}
+{% if results %}
+<div class="p-4">
+    <h6 class="text-sm font-semibold text-gray-600 mb-3">Search Results</h6>
+    {% for result in results %}
+    <div class="mb-3 pb-3 border-b border-gray-100 last:border-b-0">
+        <a href="{{ result.get_absolute_url }}" class="block hover:bg-gray-50 p-2 rounded">
+            <div class="flex items-start space-x-3">
+                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">{{ result|model_name }}</span>
+                <div class="flex-1">
+                    <h6 class="font-medium text-gray-800 mb-1">{{ result.title }}</h6>
+                    {% if result|model_name == 'News' %}
+                        <p class="text-sm text-gray-600">{{ result.excerpt }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ result.created_at|date:"M d, Y" }}</p>
+                    {% elif result|model_name == 'Page' %}
+                        <p class="text-sm text-gray-600">{{ result.content|striptags|truncatewords:20 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ result.updated_at|date:"M d, Y" }}</p>
+                    {% elif result|model_name == 'Event' %}
+                        <p class="text-sm text-gray-600">{{ result.description|striptags|truncatewords:20 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ result.start_date|date:"M d, Y" }}</p>
+                    {% elif result|model_name == 'Faculty' %}
+                        <p class="text-sm text-gray-600">{{ result.bio|striptags|truncatewords:20 }}</p>
+                    {% elif result|model_name == 'Publication' %}
+                        <p class="text-sm text-gray-600">{{ result.abstract|striptags|truncatewords:20 }}</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ result.publication_date|date:"M d, Y" }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+    {% if query %}
+    <div class="mt-3 pt-3 border-t border-gray-100">
+        <a href="{% url 'search' %}?q={{ query }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+            See all results for "{{ query }}"
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% else %}
+    {% if query %}
+    <div class="p-4 text-center text-gray-500">
+        <i class="fas fa-search text-2xl mb-2"></i>
+        <p>No results found for "{{ query }}"</p>
+    </div>
+    {% endif %}
+{% endif %}
