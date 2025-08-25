@@ -13,6 +13,11 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 from .models import *
 from .forms import ContactForm
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
+from django.views.decorators.cache import cache_page
+from django.contrib.syndication.views import Feed
+from django.utils.feedgenerator import Rss201rev2Feed
 
 def home(request):
     """Homepage view with featured content"""
@@ -41,18 +46,53 @@ def home(request):
 # Seminary Information Views
 def about_seminary(request):
     """About seminary section with enhanced context"""
+    
+    # Fetch all the actual pages from database
+    rector_message = Page.objects.filter(slug='rector-welcome', is_published=True).first()
+    mission_vision = Page.objects.filter(slug='mission-vision', is_published=True).first()
+    history = Page.objects.filter(slug='seminary-history', is_published=True).first()
+    formation_program = Page.objects.filter(slug='formation-program', is_published=True).first()
+    rules_regulations = Page.objects.filter(slug='rules-regulations', is_published=True).first()
+    
+    # Also try to get LeadershipMessage for rector if available
+    rector_leadership = None
+    try:
+        rector_leadership = LeadershipMessage.objects.get(
+            message_type='rector', 
+            is_published=True
+        )
+    except LeadershipMessage.DoesNotExist:
+        pass
+    
+    # Get actual rector faculty member
+    rector_faculty = Faculty.objects.filter(
+        is_active=True, 
+        title__icontains='rector'
+    ).first()
+    
     context = {
         'page_title': 'Our Seminary',
-        'rector_message': Page.objects.filter(slug='rector-welcome', is_published=True).first(),
-        'mission_vision': Page.objects.filter(slug='mission-vision', is_published=True).first(),
-        'history': Page.objects.filter(slug='seminary-history', is_published=True).first(),
-        'formation_program': Page.objects.filter(slug='formation-program', is_published=True).first(),
+        
+        # Use actual database content
+        'rector_message': rector_message,
+        'rector_leadership': rector_leadership,
+        'rector_faculty': rector_faculty,
+        'mission_vision': mission_vision,
+        'history': history,
+        'formation_program': formation_program,
+        'rules_regulations': rules_regulations,
+        
+        # Committees data - limit to show only a few on overview page
         'committees': Committee.objects.filter(is_active=True).order_by('order', 'name'),
+        
+        # Current announcements
         'current_announcements': Announcement.objects.filter(
             is_active=True,
             start_date__lte=timezone.now(),
             end_date__gte=timezone.now()
         ).order_by('priority', '-created_at')[:3],
+        
+        # Statistics
         'faculty_count': Faculty.objects.filter(is_active=True).count(),
         'committees_count': Committee.objects.filter(is_active=True).count(),
     }
@@ -986,15 +1026,64 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_GET
 
 @require_GET
+@cache_page(60 * 60 * 24)  # Cache for 24 hours
 def robots_txt(request):
+    """
+    Enhanced robots.txt for better SEO optimization
+    """
     lines = [
-        "User-Agent: *",
-        "Disallow: /admin/",
+        "# Robots.txt for Holy Spirit Major Seminary",
+        "# Generated automatically - DO NOT EDIT MANUALLY",
         "",
-        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml"
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /api/search/",
+        "Disallow: /load-more/",
+        "Disallow: /tinymce/",
+        "",
+        "# Allow all other content",
+        "Allow: /",
+        "Allow: /static/",
+        "Allow: /media/",
+        "",
+        "# Specific rules for major search engines",
+        "User-agent: Googlebot",
+        "Disallow: /admin/",
+        "Disallow: /api/search/",
+        "Disallow: /load-more/",
+        "",
+        "User-agent: Bingbot",
+        "Disallow: /admin/",
+        "Disallow: /api/search/",
+        "Disallow: /load-more/",
+        "Crawl-delay: 1",
+        "",
+        "# Block aggressive crawlers",
+        "User-agent: AhrefsBot",
+        "Disallow: /",
+        "",
+        "User-agent: MJ12bot",
+        "Disallow: /",
+        "",
+        "User-agent: DotBot",
+        "Disallow: /",
+        "",
+        "# Sitemaps",
+        f"Sitemap: {request.scheme}://{request.get_host()}/sitemap.xml",
+        "",
+        "# Additional information",
+        f"# Host: {request.get_host()}",
+        f"# Contact: hsmsmajorseminary@gmail.com",
+        f"# Last updated: {request.META.get('HTTP_DATE', 'Unknown')}",
     ]
-    return HttpResponse("\n".join(lines), content_type="text/plain")
-
+    
+    return HttpResponse(
+        "\n".join(lines), 
+        content_type="text/plain; charset=utf-8",
+        headers={
+            'Cache-Control': 'public, max-age=86400',  # Cache for 1 day
+        }
+    )
 
 # Search & HTMX Views
 
@@ -1329,3 +1418,25 @@ def terms_of_service(request):
 def privacy_policy(request):
     """Display Privacy Policy page"""
     return render(request, 'seminary/privacy_policy.html')
+
+
+class NewsFeed(Feed):
+    title = "Holy Spirit Major Seminary - Latest News"
+    link = "/news/"
+    description = "Latest news and updates from Holy Spirit Major Seminary"
+    feed_type = Rss201rev2Feed
+
+    def items(self):
+        return News.objects.filter(is_published=True).order_by('-created_at')[:20]
+
+    def item_title(self, item):
+        return item.title
+
+    def item_description(self, item):
+        return item.excerpt or item.content[:200]
+
+    def item_link(self, item):
+        return item.get_absolute_url()
+
+    def item_pubdate(self, item):
+        return item.created_at

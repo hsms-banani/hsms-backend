@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Site Map{% endblock %}
+
+{% block meta_description %}
+Complete site map of Holy Spirit Major Seminary website - easily navigate through all pages, sections, and resources including HSIT academic programs, publications, and spiritual resources.
+{% endblock %}
+
+{% block content %}
+<div class="bg-gradient-primary py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center text-white">
+            <h1 class="text-4xl md:text-5xl font-bold font-serif mb-4 animate-fade-in-up">
+                Site Map
+            </h1>
+            <p class="text-xl opacity-90 max-w-2xl mx-auto animate-fade-in-up" style="animation-delay: 0.2s;">
+                Complete navigation guide to all sections of our website
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="container mx-auto px-4 py-16">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <!-- Main Pages -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-home text-blue-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Main Pages</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'home' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Home</a></li>
+                    <li><a href="{% url 'contact' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Contact Us</a></li>
+                    <li><a href="{% url 'search' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Search</a></li>
+                </ul>
+            </div>
+
+            <!-- Our Seminary -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-church text-purple-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Our Seminary</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'about_seminary' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>About Seminary</a></li>
+                    <li><a href="{% url 'rector_welcome' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Rector's Welcome</a></li>
+                    <li><a href="{% url 'mission_vision' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Mission & Vision</a></li>
+                    <li><a href="{% url 'seminary_history' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Seminary History</a></li>
+                    <li><a href="{% url 'formation_program' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Formation Program</a></li>
+                    <li><a href="{% url 'rules_regulations' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Rules & Regulations</a></li>
+                    <li><a href="{% url 'committees' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Committees</a></li>
+                </ul>
+            </div>
+
+            <!-- History & Heritage -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-scroll text-amber-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">History & Heritage</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'history_heritage' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>History & Heritage</a></li>
+                    <li><a href="{% url 'church_history' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Church History</a></li>
+                    <li><a href="{% url 'bangladesh_history' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Bangladesh History</a></li>
+                    <li><a href="{% url 'local_church_history' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Local Church History</a></li>
+                </ul>
+            </div>
+
+            <!-- HSIT Academic - Main -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-graduation-cap text-green-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">HSIT - About</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'hsit_about' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>About HSIT</a></li>
+                    <li><a href="{% url 'director_message' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Director's Message</a></li>
+                    <li><a href="{% url 'philosophy_department' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Philosophy Department</a></li>
+                    <li><a href="{% url 'theology_department' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Theology Department</a></li>
+                    <li><a href="{% url 'faculty_list' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Faculty List</a></li>
+                    <li><a href="{% url 'library' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Library</a></li>
+                </ul>
+            </div>
+
+            <!-- HSIT Academic - Programs -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-book-open text-indigo-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">HSIT - Academic</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'academic_calendar' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Academic Calendar</a></li>
+                    <li><a href="{% url 'course_descriptions' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Course Descriptions</a></li>
+                    <li><a href="{% url 'enrollment_requirements' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Enrollment Requirements</a></li>
+                    <li><a href="{% url 'exam_information' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Exam Information</a></li>
+                    <li><a href="{% url 'tuition_fees' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Tuition & Fees</a></li>
+                    <li><a href="{% url 'forms_documents' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Forms & Documents</a></li>
+                </ul>
+            </div>
+
+            <!-- HSIT Students & Support -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-users text-cyan-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">HSIT - Students</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'student_list' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Student List</a></li>
+                    <li><a href="{% url 'faqs' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>FAQs</a></li>
+                </ul>
+            </div>
+
+            <!-- Publications - Main -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-book text-teal-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Publications</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'publications' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>All Publications</a></li>
+                    <li><a href="{% url 'ankur_publications' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Ankur Publications</a></li>
+                    <li><a href="{% url 'diptto_sakhyo_publications' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Diptto Sakhyo</a></li>
+                    <li><a href="{% url 'prodipon_publications' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Prodipon Publications</a></li>
+                </ul>
+            </div>
+
+            <!-- Spiritual Resources -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-pray text-violet-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Spiritual Food</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'spiritual_food' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Spiritual Food</a></li>
+                    <li><a href="{% url 'prayer_services' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Prayer Services</a></li>
+                    <li><a href="{% url 'homilies' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Homilies</a></li>
+                    <li><a href="{% url 'spiritual_directors_desk' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Spiritual Director's Desk</a></li>
+                </ul>
+            </div>
+
+            <!-- News & Events -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-newspaper text-red-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">News & Events</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'news_list' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>News List</a></li>
+                    <li><a href="{% url 'events_list' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Events List</a></li>
+                </ul>
+            </div>
+
+            <!-- Gallery & Media -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-images text-pink-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Gallery & Media</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'gallery_list' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>All Galleries</a></li>
+                    <li><a href="{% url 'photo_gallery' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Photo Gallery</a></li>
+                    <li><a href="{% url 'video_gallery' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Video Gallery</a></li>
+                </ul>
+            </div>
+
+            <!-- Legal & Utility -->
+            <div class="bg-white rounded-lg shadow-lg p-6 hover-lift">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-shield-alt text-gray-600 text-2xl mr-3"></i>
+                    <h2 class="text-xl font-bold text-gray-800">Legal & Utility</h2>
+                </div>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'terms_of_service' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Terms of Service</a></li>
+                    <li><a href="{% url 'privacy_policy' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Privacy Policy</a></li>
+                    <li><a href="{% url 'site_map' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center"><i class="fas fa-chevron-right text-xs mr-2"></i>Site Map</a></li>
+                    <li><a href="/sitemap.xml" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center" target="_blank"><i class="fas fa-chevron-right text-xs mr-2"></i>XML Sitemap</a></li>
+                    <li><a href="{% url 'robots_txt' %}" class="text-blue-600 hover:text-blue-800 transition-colors flex items-center" target="_blank"><i class="fas fa-chevron-right text-xs mr-2"></i>Robots.txt</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- API Endpoints Section (for developers) -->
+        <div class="mt-12 bg-gray-100 rounded-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <i class="fas fa-code text-blue-600 mr-3"></i>
+                API Endpoints (For Developers)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="font-semibold text-gray-800 mb-2">Search & HTMX</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/api/search/quick/</code></li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/load-more/news/</code></li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/load-more/events/</code></li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="font-semibold text-gray-800 mb-2">Data APIs</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/api/announcements/</code></li>
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/api/events/upcoming/</code></li>
+                    </ul>
+                </div>
+                <div class="bg-white rounded-lg p-4 shadow">
+                    <h3 class="font-semibold text-gray-800 mb-2">Download</h3>
+                    <ul class="space-y-1 text-sm">
+                        <li><code class="bg-gray-100 px-2 py-1 rounded">/publications/download/&lt;slug&gt;/</code></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="mt-12 bg-gradient-secondary rounded-lg p-8 text-center text-white">
+            <h2 class="text-3xl font-bold mb-4">Can't Find What You're Looking For?</h2>
+            <p class="text-xl opacity-90 mb-6">Use our powerful search to find specific content across all sections</p>
+            <div class="max-w-md mx-auto">
+                <div class="relative" x-data="{ showResults: false }">
+                    <input 
+                        name="q"
+                        type="text" 
+                        placeholder="Search the website..." 
+                        class="w-full px-6 py-4 border-0 rounded-full focus:outline-none focus:ring-4 focus:ring-white/30 text-lg text-gray-800"
+                        hx-get="{% url 'search' %}"
+                        hx-trigger="keyup changed delay:300ms"
+                        hx-target="#sitemap-search-results"
+                        @focus="showResults = true"
+                        @blur="setTimeout(() => showResults = false, 200)"
+                    >
+                    <button class="absolute right-2 top-2 bg-white text-gray-800 px-6 py-3 rounded-full hover:bg-gray-100 transition-colors font-semibold">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                    <div id="sitemap-search-results" 
+                         class="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-xl mt-2 max-h-96 overflow-y-auto z-50 text-gray-800"
+                         x-show="showResults"
+                         x-transition
+                         style="display: none;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div class="bg-blue-50 rounded-lg p-6">
+                <div class="text-3xl font-bold text-blue-600 mb-2">50+</div>
+                <div class="text-gray-600">Total Pages</div>
+            </div>
+            <div class="bg-green-50 rounded-lg p-6">
+                <div class="text-3xl font-bold text-green-600 mb-2">12</div>
+                <div class="text-gray-600">Main Sections</div>
+            </div>
+            <div class="bg-purple-50 rounded-lg p-6">
+                <div class="text-3xl font-bold text-purple-600 mb-2">5</div>
+                <div class="text-gray-600">API Endpoints</div>
+            </div>
+            <div class="bg-orange-50 rounded-lg p-6">
+                <div class="text-3xl font-bold text-orange-600 mb-2">3</div>
+                <div class="text-gray-600">Publication Types</div>
+            </div>
+        </div>
+
+        <!-- Help Section -->
+        <div class="mt-12 bg-white border border-gray-200 rounded-lg p-8 text-center">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">
+                <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                How to Use This Site Map
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">🎯 Quick Navigation</h4>
+                    <p class="text-gray-600 text-sm">Click on any link to navigate directly to that section. All links open in the same window for seamless browsing.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">🔍 Search Function</h4>
+                    <p class="text-gray-600 text-sm">Use the search bar above to find specific content across all pages, news, events, and publications.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">📱 Mobile Friendly</h4>
+                    <p class="text-gray-600 text-sm">This site map is fully responsive and works perfectly on all devices - desktop, tablet, and mobile.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

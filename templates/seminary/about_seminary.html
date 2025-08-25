@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load content_filters %}
 
 {% block title %}Our Seminary - Holy Spirit Major Seminary{% endblock %}
 
@@ -65,6 +66,46 @@
     background-color: #f8fafc;
     padding: 1.5rem 2rem;
     border-radius: 0.5rem;
+}
+
+/* Preview content styling - lighter and more condensed */
+.preview-content {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: #4b5563;
+    font-size: 1rem;
+}
+
+.preview-content p {
+    margin-bottom: 1rem;
+}
+
+.preview-content h1,
+.preview-content h2,
+.preview-content h3,
+.preview-content h4,
+.preview-content h5,
+.preview-content h6 {
+    color: #374151;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.preview-fade {
+    position: relative;
+    max-height: 200px;
+    overflow: hidden;
+}
+
+.preview-fade::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(transparent, white);
 }
 
 .stats-card {
@@ -171,7 +212,7 @@
                         {{ announcement.get_priority_display }}
                     </div>
                     <h3 class="text-lg font-semibold text-gray-800 mb-2">{{ announcement.title }}</h3>
-                    <p class="text-gray-600 text-sm">{{ announcement.content|truncatewords:20 }}</p>
+                    <p class="text-gray-600 text-sm">{{ announcement.content|striptags|truncatewords:20 }}</p>
                     <div class="mt-3 text-xs text-gray-500">
                         <i class="fas fa-users mr-1"></i> {{ announcement.target_audience }}
                     </div>
@@ -184,18 +225,64 @@
 {% endif %}
 
 <!-- Rector's Welcome Section -->
-{% if rector_message %}
+{% if rector_leadership %}
 <section class="seminary-section">
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Rector's Welcome</h2>
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ rector_leadership.title }}</h2>
                 <div class="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
             </div>
             
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="seminary-content">
-                    {{ rector_message.content|safe }}
+                <div class="flex flex-col md:flex-row gap-8 mb-6">
+                    <!-- Rector Photo -->
+                    {% if rector_leadership.leader_photo %}
+                    <div class="md:w-1/4 text-center">
+                        <img src="{{ rector_leadership.leader_photo.url }}" alt="{{ rector_leadership.leader_name }}" 
+                             class="rounded-lg shadow-lg w-full h-auto object-cover mb-4">
+                        <h4 class="text-lg font-bold text-gray-800">{{ rector_leadership.leader_name }}</h4>
+                        <p class="text-gray-600">{{ rector_leadership.leader_title }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Message Preview -->
+                    <div class="{% if rector_leadership.leader_photo %}md:w-3/4{% else %}w-full{% endif %}">
+                        {% if rector_leadership.quote %}
+                            <blockquote class="border-l-4 border-blue-500 bg-blue-50 p-4 mb-6 italic text-lg text-blue-800">
+                                "{{ rector_leadership.quote|preview_content:100 }}"
+                            </blockquote>
+                        {% endif %}
+                        
+                        <div class="preview-content preview-fade">
+                             {{ rector_leadership.message_content|preview_content:50 }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <a href="{% url 'rector_welcome' %}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-primary text-white rounded-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        Read Full Message 
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% elif rector_message %}
+<section class="seminary-section">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ rector_message.title }}</h2>
+                <div class="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-8">
+                <div class="preview-content preview-fade">
+                    {{ rector_message.content|truncatewords_html:50|safe }}
                 </div>
                 <div class="text-center mt-8">
                     <a href="{% url 'rector_welcome' %}" 
@@ -216,13 +303,13 @@
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Mission & Vision</h2>
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ mission_vision.title }}</h2>
                 <div class="w-24 h-1 bg-gradient-secondary mx-auto rounded-full"></div>
             </div>
             
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="seminary-content">
-                    {{ mission_vision.content|safe }}
+                <div class="preview-content preview-fade">
+                    {{ mission_vision.content|truncatewords_html:40|safe }}
                 </div>
                 <div class="text-center mt-8">
                     <a href="{% url 'mission_vision' %}" 
@@ -243,13 +330,13 @@
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Our History</h2>
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ history.title }}</h2>
                 <div class="w-24 h-1 bg-gradient-tertiary mx-auto rounded-full"></div>
             </div>
             
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="seminary-content">
-                    {{ history.content|safe }}
+                <div class="preview-content preview-fade">
+                    {{ history.content|truncatewords_html:40|safe }}
                 </div>
                 <div class="text-center mt-8">
                     <a href="{% url 'seminary_history' %}" 
@@ -270,13 +357,13 @@
     <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
             <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">Formation Program</h2>
+                <h2 class="text-4xl font-bold font-serif text-gray-800 mb-4">{{ formation_program.title }}</h2>
                 <div class="w-24 h-1 bg-gradient-primary mx-auto rounded-full"></div>
             </div>
             
             <div class="bg-white rounded-lg shadow-lg p-8">
-                <div class="seminary-content">
-                    {{ formation_program.content|safe }}
+                <div class="preview-content preview-fade">
+                    {{ formation_program.content|truncatewords_html:40|safe }}
                 </div>
                 <div class="text-center mt-8">
                     <a href="{% url 'formation_program' %}" 
@@ -305,7 +392,7 @@
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for committee in committees %}
+                {% for committee in committees|slice:":6" %}
                 <div class="committee-card">
                     <div class="flex items-start justify-between mb-4">
                         <h3 class="text-lg font-semibold text-gray-800">{{ committee.name }}</h3>
@@ -315,7 +402,14 @@
                     </div>
                     
                     {% if committee.description %}
-                    <p class="text-gray-600 text-sm mb-4">{{ committee.description|truncatewords:15 }}</p>
+                    <p class="text-gray-600 text-sm mb-4">{{ committee.description|striptags|truncatewords:15 }}</p>
+                    {% endif %}
+                    
+                    {% if committee.chairperson %}
+                    <div class="text-xs text-gray-500 mb-2">
+                        <i class="fas fa-user-tie mr-1"></i>
+                        Chair: {{ committee.chairperson.name }}
+                    </div>
                     {% endif %}
                     
                     {% if committee.members.exists %}

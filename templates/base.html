@@ -8,6 +8,11 @@
     <meta name="description" content="{% block meta_description %}{{ site_settings.meta_description|default:'Holy Spirit Major Seminary - Dedicated for Service. Formation in Philosophy and Theology in Dhaka, Bangladesh.' }}{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}{{ site_settings.meta_keywords|default:'Holy Spirit Major Seminary, Banani, Seminary, Catholic, Dhaka, Bangladesh, Philosophy, Theology' }}{% endblock %}">
     <meta name="author" content="Holy Spirit Major Seminary">
+    <!-- Additional SEO Meta Tags -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
+    <link rel="alternate" type="application/rss+xml" title="HSMS News Feed" href="{% url 'news_rss' %}">
+
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
     <!-- Open Graph / Facebook -->
@@ -295,6 +300,34 @@
             isolation: isolate;
         }
     </style>
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Holy Spirit Major Seminary",
+        "alternateName": "HSMS",
+        "url": "{{ request.build_absolute_uri }}",
+        "logo": "{% static 'img/logo.png' %}",
+        "description": "Holy Spirit Major Seminary - Dedicated for Service. Formation in Philosophy and Theology in Dhaka, Bangladesh.",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Block A-112, Road 27, Banani",
+            "addressLocality": "Dhaka",
+            "addressRegion": "Dhaka Division",
+            "postalCode": "1213",
+            "addressCountry": "BD"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "General Inquiry",
+            "email": "hsmsmajorseminary@gmail.com"
+        },
+        "sameAs": [
+            "https://www.facebook.com/your-facebook-page",
+            "https://www.youtube.com/your-youtube-channel"
+        ]
+        }
+        </script>
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -578,7 +611,7 @@
                     <div class="flex items-center space-x-4 mb-6">
                         <!-- Logo -->
                         <div class="flex-shrink-0">
-                            <img src="{% static 'img/logo-white-bg.jpg' %}" 
+                            <img src="{% static 'img/hsms-logo-mini.png' %}" 
                                 alt="Holy Spirit Major Seminary Logo" 
                                 class="w-10 h-10 md:w-12 md:h-12 object-contain">
                         </div>
@@ -647,7 +680,8 @@
                 <p class="text-gray-400">
                     &copy; <span id="currentYear">2025</span> Holy Spirit Major Seminary. All rights reserved. | 
                     <a href="{% url 'privacy_policy' %}" class="hover:text-white transition-colors">Privacy Policy</a> | 
-                    <a href="{% url 'terms_of_service' %}" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="{% url 'terms_of_service' %}" class="hover:text-white transition-colors">Terms of Service</a> | 
+                    <a href="{% url 'site_map' %}" class="hover:text-white transition-colors">Sitemap</a>
                 </p>
             </div>
         </div>
