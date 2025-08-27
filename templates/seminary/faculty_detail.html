@@ -1,5 +1,6 @@
 <!-- seminary/faculty_detail.html -->
 {% extends 'base.html' %}
+{% load content_filters %}
 
 {% block title %}{{ faculty.name }} - Faculty - Holy Spirit Major Seminary{% endblock %}
 
@@ -55,13 +56,13 @@
                 <div class="lg:col-span-2">
                     <h3 class="text-2xl font-bold font-serif mb-6">About {{ faculty.name }}</h3>
                     <div class="prose prose-lg max-w-none mb-8">
-                        {{ faculty.bio|linebreaks }}
+                        {{ faculty.bio|smart_preview:50 }}
                     </div>
                     
                     {% if faculty.qualifications %}
                     <h3 class="text-2xl font-bold font-serif mb-6">Qualifications</h3>
                     <div class="prose prose-lg max-w-none mb-8">
-                        {{ faculty.qualifications|linebreaks }}
+                        {{ faculty.qualifications|smart_preview:50 }}
                     </div>
                     {% endif %}
                 </div>
