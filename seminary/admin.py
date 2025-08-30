@@ -336,10 +336,15 @@ class PublicationAdmin(admin.ModelAdmin):
         }),
     )
 
+@admin.register(CommitteeMember)
+class CommitteeMemberAdmin(admin.ModelAdmin):
+    list_display = ('name', 'designation', 'email', 'phone')
+    search_fields = ('name', 'designation')
+
+
 @admin.register(Committee)
 class CommitteeAdmin(admin.ModelAdmin):
-    form = CommitteeAdminForm
-    list_display = ('name', 'committee_type', 'chairperson', 'is_active', 'established_date')
+    list_display = ('name', 'committee_type', 'advisor', 'is_active', 'established_date')
     list_filter = ('committee_type', 'is_active', 'established_date')
     search_fields = ('name', 'description')
     filter_horizontal = ('members',)
@@ -358,12 +363,14 @@ class CommitteeAdmin(admin.ModelAdmin):
             'classes': ('wide',)
         }),
         ('Leadership & Members', {
-            'fields': ('chairperson', 'members')
+            'fields': ('advisor', 'members')
         }),
         ('Settings', {
             'fields': ('established_date', 'is_active', 'order')
         }),
     )
+
+
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):

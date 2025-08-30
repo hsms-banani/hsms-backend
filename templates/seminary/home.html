@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load content_filters %}
 
 {% block title %}Holy Spirit Major Seminary - Home{% endblock %}
 
@@ -42,6 +43,164 @@
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Enhanced navigation arrows */
+    .slider-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 30;
+        font-size: 20px;
+        opacity: 0.8;
+    }
+
+    .slider-nav:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .slider-nav:active {
+        transform: translateY(-50%) scale(0.95);
+    }
+
+    .slider-nav.prev {
+        left: 30px;
+    }
+
+    .slider-nav.next {
+        right: 30px;
+    }
+
+    /* Mobile responsive navigation */
+    @media (max-width: 768px) {
+        .slider-nav {
+            width: 45px;
+            height: 45px;
+            font-size: 16px;
+        }
+        
+        .slider-nav.prev {
+            left: 15px;
+        }
+        
+        .slider-nav.next {
+            right: 15px;
+        }
+    }
+
+    /* Enhanced dot indicators */
+    .slider-dots {
+        position: absolute;
+        bottom: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        space-x: 12px;
+        z-index: 20;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 12px 20px;
+        border-radius: 25px;
+        backdrop-filter: blur(10px);
+    }
+
+    .slider-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .slider-dot.active {
+        background: white;
+        border-color: white;
+        transform: scale(1.2);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .slider-dot:hover {
+        background: rgba(255, 255, 255, 0.7);
+        transform: scale(1.1);
+    }
+
+    /* Progress bar for auto-play */
+    .slider-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+        z-index: 25;
+        transition: width 0.1s linear;
+    }
+
+    /* Pause/Play button */
+    .slider-control {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 30;
+        backdrop-filter: blur(5px);
+    }
+
+    .slider-control:hover {
+        background: rgba(0, 0, 0, 0.7);
+        transform: scale(1.1);
+    }
+
+    /* Slide content overlay */
+    .slide-content {
+        position: absolute;
+        bottom: 80px;
+        left: 50px;
+        right: 50px;
+        z-index: 20;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (max-width: 768px) {
+        .slide-content {
+            bottom: 60px;
+            left: 20px;
+            right: 20px;
+        }
+        
+        .slider-control {
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+        }
     }
 
     /* Professional announcement ticker enhancements */
@@ -169,6 +328,16 @@
         outline-offset: 2px;
     }
 
+    .slider-nav:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 2px;
+    }
+
+    .slider-dot:focus {
+        outline: 2px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 2px;
+    }
+
     /* Hide scrollbars */
     .announcement-ticker {
         scrollbar-width: none;
@@ -184,7 +353,10 @@
         .announcement-ticker,
         .announcement-item,
         .animate-shimmer,
-        .animate-pulse {
+        .animate-pulse,
+        .slide,
+        .slider-nav,
+        .slider-dot {
             animation: none !important;
             transition: none !important;
         }
@@ -193,24 +365,66 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Hero Slider -->
+    <!-- Enhanced Hero Slider -->
     <section class="hero-slider" x-data="slider()" x-init="init()">
         {% for slider in sliders %}
         <div class="slide" :class="{ 'active': currentSlide === {{ forloop.counter0 }} }">
             <img src="{{ slider.image.url }}" alt="{{ slider.title }}" class="w-full h-full object-cover">
+            <div class="slide-overlay"></div>
+            
+            <!-- Slide Content -->
+            {% if slider.title or slider.description %}
+            <div class="slide-content">
+                {% if slider.title %}
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 animate-fadeInUp">{{ slider.title }}</h1>
+                {% endif %}
+                {% if slider.description %}
+                <p class="text-xl md:text-2xl mb-6 animate-fadeInUp animation-delay-200">{{ slider.description }}</p>
+                {% endif %}
+                {% if slider.link_url %}
+                <a href="{{ slider.link_url }}" class="inline-block bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors animate-fadeInUp animation-delay-400">
+                    {{ slider.link_text|default:"Learn More" }}
+                </a>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
-        <!-- Slider Navigation -->
+        
+        <!-- Navigation Arrows -->
         {% if sliders|length > 1 %}
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
+        <button @click="prevSlide()" class="slider-nav prev" aria-label="Previous slide">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button @click="nextSlide()" class="slider-nav next" aria-label="Next slide">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        {% endif %}
+        
+        <!-- Dot Indicators -->
+        {% if sliders|length > 1 %}
+        <div class="slider-dots">
             {% for slider in sliders %}
             <button 
-                @click="currentSlide = {{ forloop.counter0 }}"
-                class="w-3 h-3 rounded-full transition-all duration-300"
-                :class="currentSlide === {{ forloop.counter0 }} ? 'bg-white' : 'bg-white/50'"
+                @click="goToSlide({{ forloop.counter0 }})"
+                class="slider-dot"
+                :class="{ 'active': currentSlide === {{ forloop.counter0 }} }"
+                aria-label="Go to slide {{ forloop.counter }}"
             ></button>
             {% endfor %}
         </div>
+        {% endif %}
+        
+        <!-- Auto-play Progress Bar -->
+        {% if sliders|length > 1 %}
+        <div class="slider-progress" :style="`width: ${progress}%`"></div>
+        {% endif %}
+        
+        <!-- Play/Pause Control -->
+        {% if sliders|length > 1 %}
+        <button @click="toggleAutoPlay()" class="slider-control" :aria-label="isPlaying ? 'Pause slideshow' : 'Play slideshow'">
+            <i :class="isPlaying ? 'fas fa-pause' : 'fas fa-play'"></i>
+        </button>
         {% endif %}
     </section>
 
@@ -424,7 +638,7 @@
                         <h3 class="text-xl font-semibold mb-3">
                             <a href="{{ event.get_absolute_url }}" class="hover:text-blue-600 transition-colors">{{ event.title }}</a>
                         </h3>
-                        <p class="text-gray-600 mb-4 line-clamp-3">{{ event.description|truncatewords:20 }}</p>
+                        <p class="text-gray-600 mb-4 line-clamp-3">{{ event.description|smart_preview:25 }}</p>
                         {% if event.location %}
                         <p class="text-sm text-gray-500 mb-2">
                             <i class="fas fa-map-marker-alt mr-1"></i> {{ event.location }}
@@ -515,26 +729,104 @@
 
 {% block extra_js %}
 <script>
-    // Hero Slider functionality
+    // Enhanced Hero Slider functionality with auto-play
     function slider() {
         return {
             currentSlide: 0,
             totalSlides: {{ sliders|length|default:1 }},
+            isPlaying: true,
+            progress: 0,
+            interval: null,
+            progressInterval: null,
+            duration: 6000, // 6 seconds per slide
             
             init() {
                 if (this.totalSlides > 1) {
-                    setInterval(() => {
-                        this.nextSlide();
-                    }, 5000);
+                    this.startAutoPlay();
+                    
+                    // Keyboard navigation
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowLeft') {
+                            this.prevSlide();
+                        } else if (e.key === 'ArrowRight') {
+                            this.nextSlide();
+                        }
+                    });
+                }
+            },
+            
+            startAutoPlay() {
+                this.stopAutoPlay(); // Clear any existing intervals
+                this.progress = 0;
+                
+                // Progress bar animation
+                this.progressInterval = setInterval(() => {
+                    this.progress += (100 / (this.duration / 50));
+                    if (this.progress >= 100) {
+                        this.progress = 100;
+                    }
+                }, 50);
+                
+                // Auto advance slides
+                this.interval = setInterval(() => {
+                    this.nextSlide();
+                }, this.duration);
+                
+                this.isPlaying = true;
+            },
+            
+            stopAutoPlay() {
+                if (this.interval) {
+                    clearInterval(this.interval);
+                    this.interval = null;
+                }
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                    this.progressInterval = null;
+                }
+                this.isPlaying = false;
+            },
+            
+            toggleAutoPlay() {
+                if (this.isPlaying) {
+                    this.stopAutoPlay();
+                } else {
+                    this.startAutoPlay();
                 }
             },
             
             nextSlide() {
                 this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
             },
             
             prevSlide() {
                 this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
+            },
+            
+            goToSlide(index) {
+                this.currentSlide = index;
+                if (this.isPlaying) {
+                    this.resetProgress();
+                }
+            },
+            
+            resetProgress() {
+                this.progress = 0;
+                if (this.progressInterval) {
+                    clearInterval(this.progressInterval);
+                    this.progressInterval = setInterval(() => {
+                        this.progress += (100 / (this.duration / 50));
+                        if (this.progress >= 100) {
+                            this.progress = 100;
+                        }
+                    }, 50);
+                }
             }
         }
     }
@@ -683,18 +975,28 @@
                 }
                 
                 // Store in session storage so it doesn't show again
-                sessionStorage.setItem('announcementsClosed', 'true');
+                try {
+                    sessionStorage.setItem('announcementsClosed', 'true');
+                } catch (e) {
+                    // Fallback if sessionStorage is not available
+                    console.log('Session storage not available');
+                }
             }
         }
     }
 
     // Check if announcements were previously closed
     document.addEventListener('DOMContentLoaded', function() {
-        if (sessionStorage.getItem('announcementsClosed') === 'true') {
-            const ticker = document.querySelector('.announcement-ticker');
-            if (ticker) {
-                ticker.style.display = 'none';
+        try {
+            if (sessionStorage.getItem('announcementsClosed') === 'true') {
+                const ticker = document.querySelector('.announcement-ticker');
+                if (ticker) {
+                    ticker.style.display = 'none';
+                }
             }
+        } catch (e) {
+            // Fallback if sessionStorage is not available
+            console.log('Session storage not available');
         }
     });
 
@@ -713,7 +1015,95 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+        
+        /* Animation utilities */
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animation-delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .animation-delay-400 {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     `;
     document.head.appendChild(style);
+
+    // Touch/swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        const slider = document.querySelector('[x-data*="slider()"]');
+        if (!slider) return;
+        
+        const swipeThreshold = 50;
+        const diff = touchStartX - touchEndX;
+        
+        if (Math.abs(diff) > swipeThreshold) {
+            // Get Alpine.js data
+            const alpineData = Alpine.$data(slider);
+            
+            if (diff > 0) {
+                // Swipe left - next slide
+                alpineData.nextSlide();
+            } else {
+                // Swipe right - previous slide
+                alpineData.prevSlide();
+            }
+        }
+    }
+
+    // Intersection Observer for performance optimization
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // Ensure smooth auto-play when slider comes into view
+                const slider = entry.target.querySelector('[x-data*="slider()"]');
+                if (slider) {
+                    const alpineData = Alpine.$data(slider);
+                    if (alpineData && !alpineData.isPlaying && alpineData.totalSlides > 1) {
+                        alpineData.startAutoPlay();
+                    }
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Observe the hero slider section
+    document.addEventListener('DOMContentLoaded', function() {
+        const heroSlider = document.querySelector('.hero-slider');
+        if (heroSlider) {
+            observer.observe(heroSlider);
+        }
+    });
 </script>
 {% endblock %}

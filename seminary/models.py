@@ -44,7 +44,7 @@ class Faculty(models.Model):
     name = models.CharField(max_length=200)
     title = models.CharField(max_length=100)
     departments = models.ManyToManyField(Department, related_name='faculty')
-    bio = HTMLField(help_text="Faculty biography with rich text formatting")  # Rich text
+    bio = HTMLField(blank=True, null=True, help_text="Faculty biography with rich text formatting")  # Optional Rich text
     photo = models.ImageField(upload_to='faculty/', blank=True, null=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -113,7 +113,7 @@ class News(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     content = HTMLField(help_text="News content with rich text formatting")  # Rich text
-    excerpt = models.CharField(max_length=300)
+    excerpt = models.CharField(max_length=300, blank=True,)
     featured_image = models.ImageField(upload_to='news/', blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     is_published = models.BooleanField(default=True)
@@ -193,8 +193,8 @@ class Event(models.Model):
 
 class Publication(models.Model):
     PUBLICATION_TYPES = [
-        ('ankur', 'Ankur - Student Research Papers'),
-        ('diptto_sakhyo', 'Diptto Sakhyo - Seminary Journal'),
+        ('ankur', 'Ankur - Newsletter'),
+        ('diptto_sakhyo', 'Diptto Sakhyo - Major Seminary Journal'),
         ('prodipon', 'Prodipon - Theological Journal'),
     ]
     
@@ -316,6 +316,16 @@ class Slider(models.Model):
     def __str__(self):
         return self.title
 
+class CommitteeMember(models.Model):
+    name = models.CharField(max_length=200)
+    designation = models.CharField(max_length=200, blank=True)
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Committee(models.Model):
     COMMITTEE_TYPES = [
         ('editorial', 'Editorial Committee'),
@@ -332,8 +342,10 @@ class Committee(models.Model):
     committee_type = models.CharField(max_length=20, choices=COMMITTEE_TYPES)
     description = HTMLField(help_text="Committee description with rich text formatting")  # Rich text
     responsibilities = HTMLField(blank=True, help_text="Committee responsibilities and duties")  # Rich text
-    chairperson = models.ForeignKey(Faculty, on_delete=models.SET_NULL, null=True, related_name='chaired_committees')
-    members = models.ManyToManyField(Faculty, related_name='committee_memberships', blank=True)
+    advisor = models.ForeignKey(
+        Faculty, on_delete=models.SET_NULL, null=True, related_name='advised_committees'
+    )
+    members = models.ManyToManyField(CommitteeMember, related_name='committees', blank=True)
     is_active = models.BooleanField(default=True)
     established_date = models.DateField(blank=True, null=True)
     order = models.PositiveIntegerField(default=0)
@@ -343,6 +355,7 @@ class Committee(models.Model):
     
     def __str__(self):
         return self.name
+
 
 class Announcement(models.Model):
     PRIORITY_CHOICES = [
