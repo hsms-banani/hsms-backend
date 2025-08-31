@@ -516,8 +516,3 @@ class SeminaryAdministrationAdmin(admin.ModelAdmin):
         if obj:  # editing an existing object
             return ['created_at', 'updated_at']
         return []
-    
-    class Media:
-        css = {
-            'all': ('admin/css/custom-admin.css',)
-        }
