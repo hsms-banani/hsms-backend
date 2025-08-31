@@ -1,0 +1,306 @@
+<!-- templates/seminary/seminary_administration.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Seminary Administration - {{ block.super }}{% endblock %}
+
+{% block meta_description %}Meet the dedicated administration team of Holy Spirit Major Seminary leading our spiritual and academic mission.{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        backdrop-filter: blur(8px);
+    }
+    
+    .admin-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .admin-photo {
+        transition: all 0.3s ease;
+        filter: grayscale(0.1);
+    }
+    
+    .admin-card:hover .admin-photo {
+        filter: grayscale(0);
+        transform: scale(1.02);
+    }
+    
+    .designation-badge {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        transition: all 0.3s ease;
+    }
+    
+    .admin-card:hover .designation-badge {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        transform: scale(1.05);
+    }
+    
+    .search-container {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 2px solid rgba(148, 163, 184, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .search-container:focus-within {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        background: white;
+    }
+    
+    .sort-select {
+        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        border: 2px solid rgba(148, 163, 184, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .sort-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .contact-info {
+        background: rgba(59, 130, 246, 0.05);
+        border-left: 4px solid #3b82f6;
+        transition: all 0.3s ease;
+    }
+    
+    .admin-card:hover .contact-info {
+        background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .htmx-indicator {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .htmx-request .htmx-indicator {
+        opacity: 1;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+        animation: float 20s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+    }
+    
+    .admin-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+    }
+    
+    @media (max-width: 768px) {
+        .admin-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .admin-card {
+            margin: 0 0.5rem;
+        }
+    }
+    
+    .loading-skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+        background-size: 400% 100%;
+        animation: skeleton 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes skeleton {
+        0% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="page-header text-white py-16 relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Seminary Administration</h1>
+            <p class="text-xl opacity-90 max-w-3xl mx-auto">
+                Meet the dedicated leadership team committed to guiding our seminary's spiritual, academic, and administrative mission
+            </p>
+            
+            <!-- Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 max-w-2xl mx-auto">
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+                    <div class="text-2xl font-bold">{{ total_administrators }}</div>
+                    <div class="text-sm opacity-90">Administrator{{ total_administrators|pluralize }}</div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+                    <div class="text-2xl font-bold"><i class="fas fa-users"></i></div>
+                    <div class="text-sm opacity-90">Leadership Team</div>
+                </div>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+                    <div class="text-2xl font-bold"><i class="fas fa-heart"></i></div>
+                    <div class="text-sm opacity-90">Serving with Love</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Breadcrumbs -->
+<div class="bg-gray-50 py-3">
+    <div class="container mx-auto px-4">
+        <nav class="text-sm text-gray-600">
+            {% for name, url in breadcrumbs %}
+                {% if not forloop.last %}
+                    <a href="{% url url %}" class="hover:text-blue-600 transition-colors">{{ name }}</a>
+                    <span class="mx-2">/</span>
+                {% else %}
+                    <span class="text-gray-800 font-medium">{{ name }}</span>
+                {% endif %}
+            {% endfor %}
+        </nav>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="py-12 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4">
+        
+        <!-- Filters and Search -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 mb-8 border border-gray-100">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                
+                <!-- Search Input -->
+                <div class="search-container rounded-full px-6 py-3 flex-1 max-w-md">
+                    <div class="flex items-center">
+                        <i class="fas fa-search text-gray-400 mr-3"></i>
+                        <input 
+                            type="text" 
+                            placeholder="Search administrators..." 
+                            class="flex-1 border-none outline-none bg-transparent"
+                            name="search"
+                            value="{{ search_query }}"
+                            hx-get="{% url 'administration_filter' %}"
+                            hx-trigger="keyup changed delay:300ms"
+                            hx-target="#administration-list"
+                            hx-include="[name='sort']"
+                            hx-indicator="#loading-indicator"
+                        >
+                    </div>
+                </div>
+                
+                <!-- Sort Dropdown -->
+                <div class="flex items-center gap-2">
+                    <label class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select 
+                        name="sort" 
+                        class="sort-select rounded-lg px-4 py-2 text-sm focus:outline-none"
+                        hx-get="{% url 'administration_filter' %}"
+                        hx-trigger="change"
+                        hx-target="#administration-list"
+                        hx-include="[name='search']"
+                        hx-indicator="#loading-indicator"
+                    >
+                        {% for value, label in sort_options %}
+                            <option value="{{ value }}" {% if sort_by == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="htmx-indicator">
+                    <div class="flex items-center text-blue-600">
+                        <svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span class="text-sm">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Administration List -->
+        <div id="administration-list">
+            {% include 'seminary/partials/administration_list.html' %}
+        </div>
+        
+        <!-- Call to Action -->
+        {% if administrators %}
+        <div class="text-center mt-12">
+            <div class="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto border border-gray-100">
+                <div class="text-blue-600 text-5xl mb-4">
+                    <i class="fas fa-hands-praying"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Serving with Dedication</h3>
+                <p class="text-gray-600 leading-relaxed">
+                    Our administration team works tirelessly to ensure that Holy Spirit Major Seminary 
+                    provides the best possible environment for spiritual formation and academic excellence. 
+                    Each member brings unique expertise and unwavering commitment to our shared mission.
+                </p>
+                <div class="mt-6">
+                    <a href="{% url 'contact' %}" class="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Contact Us
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+// Add some interactive enhancements
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth scroll to administrator cards when filters change
+    document.body.addEventListener('htmx:afterRequest', function(evt) {
+        if (evt.detail.target.id === 'administration-list') {
+            // Small delay to ensure content is rendered
+            setTimeout(() => {
+                const firstCard = document.querySelector('.admin-card');
+                if (firstCard) {
+                    firstCard.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'nearest' 
+                    });
+                }
+            }, 100);
+        }
+    });
+    
+    // Add keyboard navigation for search
+    const searchInput = document.querySelector('input[name="search"]');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                this.value = '';
+                this.dispatchEvent(new Event('keyup'));
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

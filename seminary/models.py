@@ -64,6 +64,72 @@ class Faculty(models.Model):
 
     def get_absolute_url(self):
         return reverse('faculty_detail', kwargs={'pk': self.pk})
+    
+
+class SeminaryAdministration(models.Model):
+    """Seminary Administration members model"""
+    name = models.CharField(max_length=200, help_text="Full name of the administrator")
+    photo = models.ImageField(
+        upload_to='administration/', 
+        blank=True, 
+        null=True,
+        help_text="Administrator's photo (recommended: 400x400px)"
+    )
+    designation = models.CharField(
+        max_length=200, 
+        help_text="Official title/position (e.g., Rector, Vice Rector, Bursar)"
+    )
+    bio = HTMLField(
+        blank=True, 
+        null=True,
+        help_text="Brief biography or background information"
+    )
+    email = models.EmailField(blank=True, help_text="Official email address")
+    phone = models.CharField(max_length=20, blank=True, help_text="Contact phone number")
+    office_location = models.CharField(
+        max_length=100, 
+        blank=True, 
+        help_text="Office location or room number"
+    )
+    office_hours = models.CharField(
+        max_length=100, 
+        blank=True,
+        help_text="Available office hours"
+    )
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Display order (lower numbers appear first)"
+    )
+    is_active = models.BooleanField(default=True, help_text="Show on website")
+    start_date = models.DateField(
+        blank=True, 
+        null=True, 
+        help_text="When this person started in this role"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name = "Seminary Administrator"
+        verbose_name_plural = "Seminary Administration"
+    
+    def __str__(self):
+        return f"{self.name} - {self.designation}"
+    
+    def get_absolute_url(self):
+        return reverse('administration_detail', kwargs={'pk': self.pk})
+    
+    @property
+    def display_name(self):
+        """Get formatted name for display"""
+        return self.name
+    
+    @property
+    def has_contact_info(self):
+        """Check if administrator has contact information"""
+        return bool(self.email or self.phone or self.office_location)
+    
 
 class Page(models.Model):
     title = models.CharField(max_length=200)

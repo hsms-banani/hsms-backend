@@ -1,0 +1,166 @@
+<!-- templates/seminary/partials/administration_list.html -->
+{% load static %}
+
+{% if administrators %}
+    <div class="admin-grid">
+        {% for admin in administrators %}
+        <div class="admin-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl">
+            <!-- Administrator Photo -->
+            <div class="relative">
+                {% if admin.photo %}
+                    <img 
+                        src="{{ admin.photo.url }}" 
+                        alt="{{ admin.name }}"
+                        class="admin-photo w-full h-64 object-cover"
+                        loading="lazy"
+                    >
+                {% else %}
+                    <div class="w-full h-64 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                        <div class="text-6xl text-blue-300">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Designation Badge -->
+                <div class="absolute top-4 left-4">
+                    <span class="designation-badge px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
+                        {{ admin.designation }}
+                    </span>
+                </div>
+                
+                <!-- View Details Button -->
+                <div class="absolute bottom-4 right-4 opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <a 
+                        href="{{ admin.get_absolute_url }}"
+                        class="bg-white bg-opacity-90 hover:bg-opacity-100 text-blue-600 px-4 py-2 rounded-full text-sm font-medium shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center"
+                    >
+                        <i class="fas fa-eye mr-2"></i>
+                        View Details
+                    </a>
+                </div>
+                
+                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <!-- Administrator Information -->
+            <div class="p-6">
+                <!-- Name and Title -->
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">{{ admin.name }}</h3>
+                    <p class="text-blue-600 font-medium">{{ admin.designation }}</p>
+                </div>
+                
+                <!-- Biography Preview -->
+                {% if admin.bio %}
+                <div class="mb-4">
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        {{ admin.bio|striptags|truncatewords:20 }}
+                    </p>
+                </div>
+                {% endif %}
+                
+                <!-- Contact Information -->
+                {% if admin.has_contact_info %}
+                <div class="contact-info rounded-lg p-4 mb-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2 flex items-center">
+                        <i class="fas fa-address-card mr-2 text-blue-500"></i>
+                        Contact Information
+                    </h4>
+                    
+                    <div class="space-y-2 text-sm">
+                        {% if admin.email %}
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-envelope w-4 text-blue-500 mr-3"></i>
+                            <a href="mailto:{{ admin.email }}" class="hover:text-blue-600 transition-colors">
+                                {{ admin.email }}
+                            </a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if admin.phone %}
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-phone w-4 text-blue-500 mr-3"></i>
+                            <a href="tel:{{ admin.phone }}" class="hover:text-blue-600 transition-colors">
+                                {{ admin.phone }}
+                            </a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if admin.office_location %}
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-map-marker-alt w-4 text-blue-500 mr-3"></i>
+                            <span>{{ admin.office_location }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if admin.office_hours %}
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-clock w-4 text-blue-500 mr-3"></i>
+                            <span>{{ admin.office_hours }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-3">
+                    <a 
+                        href="{{ admin.get_absolute_url }}"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300 text-center inline-flex items-center justify-center"
+                    >
+                        <i class="fas fa-user mr-2"></i>
+                        View Profile
+                    </a>
+                    
+                    {% if admin.email %}
+                    <a 
+                        href="mailto:{{ admin.email }}"
+                        class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300 inline-flex items-center justify-center"
+                    >
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                <!-- Service Duration -->
+                {% if admin.start_date %}
+                <div class="mt-4 pt-4 border-t border-gray-100">
+                    <div class="text-xs text-gray-500 flex items-center justify-center">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        Serving since {{ admin.start_date|date:"F Y" }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <!-- Empty State -->
+    <div class="text-center py-16">
+        <div class="max-w-md mx-auto">
+            <div class="text-gray-400 text-6xl mb-6">
+                <i class="fas fa-users-slash"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">No Administrators Found</h3>
+            {% if search_query %}
+            <p class="text-gray-500 mb-6">
+                No administrators match your search for "{{ search_query }}". 
+                Try adjusting your search terms or clearing the search.
+            </p>
+            <button 
+                onclick="document.querySelector('input[name=search]').value=''; document.querySelector('input[name=search]').dispatchEvent(new Event('keyup'));"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+            >
+                Clear Search
+            </button>
+            {% else %}
+            <p class="text-gray-500">
+                No administrators are currently listed. Please check back later.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

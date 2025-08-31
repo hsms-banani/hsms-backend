@@ -1,0 +1,444 @@
+<!-- templates/seminary/administration_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ administrator.name }} - {{ administrator.designation }} - {{ block.super }}{% endblock %}
+
+{% block meta_description %}{{ meta_description }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M20 20c0 11.046-8.954 20-20 20s-20-8.954-20-20 8.954-20 20-20 20 8.954 20 20zm-20-10c5.523 0 10 4.477 10 10s-4.477 10-10 10-10-4.477-10-10 4.477-10 10-10z'/%3E%3C/g%3E%3C/svg%3E") repeat;
+        animation: float 25s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(3deg); }
+    }
+    
+    .profile-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        background: rgba(255, 255, 255, 0.98);
+    }
+    
+    .profile-photo {
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+    
+    .profile-photo:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .info-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .contact-item {
+        transition: all 0.3s ease;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+    }
+    
+    .contact-item:hover {
+        background: rgba(59, 130, 246, 0.1);
+        transform: translateX(5px);
+    }
+    
+    .related-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+    
+    .related-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .section-divider {
+        background: linear-gradient(90deg, transparent 0%, #e2e8f0 50%, transparent 100%);
+        height: 1px;
+        margin: 3rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-white py-16 relative">
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex flex-col lg:flex-row items-center gap-8">
+                
+                <!-- Profile Photo -->
+                <div class="flex-shrink-0">
+                    {% if administrator.photo %}
+                        <img 
+                            src="{{ administrator.photo.url }}" 
+                            alt="{{ administrator.name }}"
+                            class="profile-photo w-48 h-48 lg:w-56 lg:h-56 object-cover rounded-2xl"
+                        >
+                    {% else %}
+                        <div class="profile-photo w-48 h-48 lg:w-56 lg:h-56 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center backdrop-blur-sm">
+                            <i class="fas fa-user-tie text-6xl text-white opacity-60"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Profile Information -->
+                <div class="flex-1 text-center lg:text-left">
+                    <h1 class="text-4xl lg:text-5xl font-bold mb-4">{{ administrator.name }}</h1>
+                    <div class="bg-white bg-opacity-20 inline-block px-6 py-3 rounded-full backdrop-blur-sm mb-6">
+                        <span class="text-xl font-semibold">{{ administrator.designation }}</span>
+                    </div>
+                    
+                    {% if administrator.start_date %}
+                    <div class="flex items-center justify-center lg:justify-start text-lg opacity-90">
+                        <i class="fas fa-calendar-check mr-3"></i>
+                        <span>Serving since {{ administrator.start_date|date:"F Y" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Breadcrumbs -->
+<div class="bg-gray-50 py-3">
+    <div class="container mx-auto px-4">
+        <nav class="text-sm text-gray-600">
+            {% for name, url in breadcrumbs %}
+                {% if not forloop.last %}
+                    <a href="{% url url %}" class="hover:text-blue-600 transition-colors">{{ name }}</a>
+                    <span class="mx-2">/</span>
+                {% else %}
+                    <span class="text-gray-800 font-medium">{{ name }}</span>
+                {% endif %}
+            {% endfor %}
+        </nav>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="py-12 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div class="container mx-auto px-4">
+        <div class="max-w-6xl mx-auto">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Main Content Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    {% if administrator.bio %}
+                    <!-- Biography Section -->
+                    <div class="info-card rounded-2xl p-8 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                                <i class="fas fa-user-graduate text-blue-600"></i>
+                            </div>
+                            Biography
+                        </h2>
+                        <div class="prose max-w-none text-gray-700 leading-relaxed">
+                            {{ administrator.bio|safe }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Role & Responsibilities -->
+                    <div class="info-card rounded-2xl p-8 shadow-lg">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                            <div class="bg-green-100 p-3 rounded-lg mr-4">
+                                <i class="fas fa-tasks text-green-600"></i>
+                            </div>
+                            Role & Responsibilities
+                        </h2>
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                            <div class="text-lg font-semibold text-blue-800 mb-3">{{ administrator.designation }}</div>
+                            <p class="text-gray-700 leading-relaxed">
+                                As {{ administrator.designation }}, {{ administrator.name }} plays a crucial role in the 
+                                administration and spiritual guidance of Holy Spirit Major Seminary. This position involves 
+                                overseeing various aspects of seminary life, ensuring the highest standards of formation 
+                                and education for our seminarians.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    
+                    <!-- Contact Information -->
+                    {% if administrator.has_contact_info %}
+                    <div class="info-card rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-address-card text-blue-600"></i>
+                            </div>
+                            Contact Information
+                        </h3>
+                        
+                        <div class="space-y-3">
+                            {% if administrator.email %}
+                            <div class="contact-item">
+                                <div class="flex items-center">
+                                    <i class="fas fa-envelope text-blue-500 w-5 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm text-gray-500">Email</div>
+                                        <a href="mailto:{{ administrator.email }}" class="text-blue-600 hover:text-blue-700 font-medium">
+                                            {{ administrator.email }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if administrator.phone %}
+                            <div class="contact-item">
+                                <div class="flex items-center">
+                                    <i class="fas fa-phone text-blue-500 w-5 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm text-gray-500">Phone</div>
+                                        <a href="tel:{{ administrator.phone }}" class="text-blue-600 hover:text-blue-700 font-medium">
+                                            {{ administrator.phone }}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if administrator.office_location %}
+                            <div class="contact-item">
+                                <div class="flex items-center">
+                                    <i class="fas fa-map-marker-alt text-blue-500 w-5 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm text-gray-500">Office</div>
+                                        <span class="text-gray-700 font-medium">{{ administrator.office_location }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if administrator.office_hours %}
+                            <div class="contact-item">
+                                <div class="flex items-center">
+                                    <i class="fas fa-clock text-blue-500 w-5 mr-3"></i>
+                                    <div>
+                                        <div class="text-sm text-gray-500">Office Hours</div>
+                                        <span class="text-gray-700 font-medium">{{ administrator.office_hours }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Contact Action -->
+                        {% if administrator.email %}
+                        <div class="mt-6">
+                            <a 
+                                href="mailto:{{ administrator.email }}"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-300 inline-flex items-center justify-center"
+                            >
+                                <i class="fas fa-envelope mr-2"></i>
+                                Send Email
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Quick Facts -->
+                    <div class="info-card rounded-2xl p-6 shadow-lg">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                            <div class="bg-green-100 p-2 rounded-lg mr-3">
+                                <i class="fas fa-info-circle text-green-600"></i>
+                            </div>
+                            Quick Facts
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-gray-600">Position</span>
+                                <span class="font-semibold text-gray-800">{{ administrator.designation }}</span>
+                            </div>
+                            
+                            {% if administrator.start_date %}
+                            <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span class="text-gray-600">Service Start</span>
+                                <span class="font-semibold text-gray-800">{{ administrator.start_date|date:"M Y" }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="flex justify-between items-center py-2">
+                                <span class="text-gray-600">Institution</span>
+                                <span class="font-semibold text-gray-800">HSMS</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Back to Administration -->
+                    <div class="info-card rounded-2xl p-6 shadow-lg text-center">
+                        <a 
+                            href="{% url 'seminary_administration' %}"
+                            class="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium transition-colors"
+                        >
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Administration
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section Divider -->
+            <div class="section-divider"></div>
+            
+            <!-- Related Administrators -->
+            {% if related_administrators %}
+            <div class="mt-12">
+                <h2 class="text-3xl font-bold text-gray-800 text-center mb-8">Other Administrators</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {% for related_admin in related_administrators %}
+                    <div class="related-card rounded-2xl overflow-hidden shadow-lg">
+                        <!-- Photo -->
+                        <div class="relative h-48">
+                            {% if related_admin.photo %}
+                                <img 
+                                    src="{{ related_admin.photo.url }}" 
+                                    alt="{{ related_admin.name }}"
+                                    class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                                    loading="lazy"
+                                >
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                                    <i class="fas fa-user-tie text-4xl text-blue-300"></i>
+                                </div>
+                            {% endif %}
+                            
+                            <!-- Overlay -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-gray-800 mb-1">{{ related_admin.name }}</h3>
+                            <p class="text-blue-600 font-medium mb-3">{{ related_admin.designation }}</p>
+                            
+                            <a 
+                                href="{{ related_admin.get_absolute_url }}"
+                                class="inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+                            >
+                                View Profile
+                                <i class="fas fa-arrow-right ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Call to Action -->
+            <div class="mt-16 text-center">
+                <div class="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto border border-gray-100">
+                    <div class="text-blue-600 text-5xl mb-4">
+                        <i class="fas fa-hands-praying"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Leadership in Service</h3>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Our administration team is dedicated to fostering an environment of spiritual growth, 
+                        academic excellence, and pastoral care. Each leader brings years of experience and 
+                        unwavering commitment to our mission.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{% url 'seminary_administration' %}" class="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-colors inline-flex items-center justify-center">
+                            <i class="fas fa-users mr-2"></i>
+                            View All Administrators
+                        </a>
+                        <a href="{% url 'contact' %}" class="bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-6 rounded-lg font-medium transition-colors inline-flex items-center justify-center">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Contact Seminary
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add some interactive enhancements
+document.addEventListener('DOMContentLoaded', function() {
+    // Smooth reveal animation for content sections
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Apply observer to cards
+    document.querySelectorAll('.info-card, .related-card').forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+    
+    // Add click animation for contact items
+    document.querySelectorAll('.contact-item a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.className = 'absolute inset-0 bg-blue-200 rounded-lg opacity-30';
+            ripple.style.animation = 'ping 0.5s ease-out';
+            this.parentElement.style.position = 'relative';
+            this.parentElement.appendChild(ripple);
+            
+            setTimeout(() => ripple.remove(), 500);
+        });
+    });
+});
+</script>
+{% endblock %}

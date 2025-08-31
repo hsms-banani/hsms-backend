@@ -40,6 +40,10 @@ urlpatterns = [
     path('hsit/forms-documents/', views.forms_documents, name='forms_documents'),
     path('hsit/faqs/', views.faqs, name='faqs'),
     
+    # Seminary Administration URLs (add these to the "Our Seminary Section")
+    path('our-seminary/administration/', views.seminary_administration, name='seminary_administration'),
+    path('our-seminary/administration/<int:pk>/', views.administration_detail, name='administration_detail'),
+
     # Publications Section
     path('publications/', views.publications, name='publications'),
     path('publications/detail/<slug:slug>/', views.publication_detail, name='publication_detail'),
@@ -79,6 +83,8 @@ urlpatterns = [
     path('api/announcements/', views.api_announcements, name='api_announcements'),
     path('api/events/upcoming/', views.api_upcoming_events, name='api_upcoming_events'),
     
+    # API endpoint for HTMX filtering
+    path('api/administration/filter/', views.administration_filter, name='administration_filter'),
     # Utility Pages
     path('sitemap/', views.site_map, name='site_map'),
 

@@ -1440,3 +1440,117 @@ class NewsFeed(Feed):
 
     def item_pubdate(self, item):
         return item.created_at
+    
+
+def seminary_administration(request):
+    """Seminary Administration page with HTMX filtering"""
+    
+    # Get filter parameters
+    search_query = request.GET.get('search', '').strip()
+    sort_by = request.GET.get('sort', 'order')  # Default sort by order
+    
+    # Base queryset
+    administrators = SeminaryAdministration.objects.filter(is_active=True)
+    
+    # Apply search filter
+    if search_query:
+        administrators = administrators.filter(
+            Q(name__icontains=search_query) | 
+            Q(designation__icontains=search_query) |
+            Q(bio__icontains=search_query)
+        )
+    
+    # Apply sorting
+    if sort_by == 'name':
+        administrators = administrators.order_by('name')
+    elif sort_by == 'designation':
+        administrators = administrators.order_by('designation', 'name')
+    elif sort_by == 'start_date':
+        administrators = administrators.order_by('-start_date', 'order')
+    else:  # default to order
+        administrators = administrators.order_by('order', 'name')
+    
+    # Get statistics
+    total_administrators = SeminaryAdministration.objects.filter(is_active=True).count()
+    
+    context = {
+        'administrators': administrators,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'total_administrators': total_administrators,
+        'page_title': 'Seminary Administration',
+        'breadcrumbs': [
+            ('Home', 'home'),
+            ('Our Seminary', 'about_seminary'),
+            ('Seminary Administration', None)
+        ],
+        'sort_options': [
+            ('order', 'Display Order'),
+            ('name', 'Name'),
+            ('designation', 'Designation'),
+            ('start_date', 'Start Date'),
+        ]
+    }
+    
+    # Return partial template for HTMX requests
+    if request.headers.get('HX-Request'):
+        return render(request, 'seminary/partials/administration_list.html', context)
+    
+    return render(request, 'seminary/seminary_administration.html', context)
+
+def administration_detail(request, pk):
+    """Individual administrator detail page"""
+    administrator = get_object_or_404(SeminaryAdministration, pk=pk, is_active=True)
+    
+    # Get related administrators (same level or similar designation)
+    related_administrators = SeminaryAdministration.objects.filter(
+        is_active=True
+    ).exclude(pk=pk).order_by('order')[:3]
+    
+    context = {
+        'administrator': administrator,
+        'related_administrators': related_administrators,
+        'page_title': f"{administrator.name} - {administrator.designation}",
+        'breadcrumbs': [
+            ('Home', 'home'),
+            ('Our Seminary', 'about_seminary'),
+            ('Seminary Administration', 'seminary_administration'),
+            (administrator.name, None)
+        ],
+        'meta_description': f"{administrator.name}, {administrator.designation} at Holy Spirit Major Seminary. {administrator.bio[:120] if administrator.bio else ''}",
+    }
+    
+    return render(request, 'seminary/administration_detail.html', context)
+
+@require_GET
+def administration_filter(request):
+    """HTMX endpoint for filtering administrators"""
+    search_query = request.GET.get('search', '').strip()
+    sort_by = request.GET.get('sort', 'order')
+    
+    administrators = SeminaryAdministration.objects.filter(is_active=True)
+    
+    if search_query:
+        administrators = administrators.filter(
+            Q(name__icontains=search_query) | 
+            Q(designation__icontains=search_query) |
+            Q(bio__icontains=search_query)
+        )
+    
+    # Apply sorting
+    if sort_by == 'name':
+        administrators = administrators.order_by('name')
+    elif sort_by == 'designation':
+        administrators = administrators.order_by('designation', 'name')
+    elif sort_by == 'start_date':
+        administrators = administrators.order_by('-start_date', 'order')
+    else:
+        administrators = administrators.order_by('order', 'name')
+    
+    context = {
+        'administrators': administrators,
+        'search_query': search_query,
+        'sort_by': sort_by,
+    }
+    
+    return render(request, 'seminary/partials/administration_list.html', context)

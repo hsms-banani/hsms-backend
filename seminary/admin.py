@@ -455,3 +455,69 @@ class Media:
     css = {
         'all': ('css/tinymce-content.css',)
     }
+
+
+class SeminaryAdministrationAdminForm(forms.ModelForm):
+    bio = forms.CharField(widget=TinyMCE(attrs={'cols': 80, 'rows': 15}), required=False)
+    
+    class Meta:
+        model = SeminaryAdministration
+        fields = '__all__'
+
+@admin.register(SeminaryAdministration)
+class SeminaryAdministrationAdmin(admin.ModelAdmin):
+    form = SeminaryAdministrationAdminForm
+    list_display = ('name', 'designation', 'email', 'phone', 'is_active', 'order')
+    list_filter = ('is_active', 'start_date', 'created_at')
+    search_fields = ('name', 'designation', 'email')
+    list_editable = ('order', 'is_active')
+    
+    fieldsets = (
+        ('Personal Information', {
+            'fields': ('name', 'designation', 'photo'),
+            'classes': ('wide',)
+        }),
+        ('Biography', {
+            'fields': ('bio',),
+            'classes': ('wide', 'collapse')
+        }),
+        ('Contact Information', {
+            'fields': ('email', 'phone', 'office_location', 'office_hours'),
+            'classes': ('wide',)
+        }),
+        ('Administrative Details', {
+            'fields': ('start_date', 'order', 'is_active'),
+            'classes': ('wide',)
+        }),
+    )
+    
+    actions = ['make_active', 'make_inactive', 'duplicate_administrator']
+    
+    def make_active(self, request, queryset):
+        updated = queryset.update(is_active=True)
+        self.message_user(request, f'{updated} administrators were successfully activated.')
+    make_active.short_description = "Mark selected administrators as active"
+    
+    def make_inactive(self, request, queryset):
+        updated = queryset.update(is_active=False)
+        self.message_user(request, f'{updated} administrators were successfully deactivated.')
+    make_inactive.short_description = "Mark selected administrators as inactive"
+    
+    def duplicate_administrator(self, request, queryset):
+        for admin_obj in queryset:
+            admin_obj.pk = None
+            admin_obj.name = f"{admin_obj.name} (Copy)"
+            admin_obj.is_active = False
+            admin_obj.save()
+        self.message_user(request, f'{queryset.count()} administrators were successfully duplicated.')
+    duplicate_administrator.short_description = "Duplicate selected administrators"
+    
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # editing an existing object
+            return ['created_at', 'updated_at']
+        return []
+    
+    class Media:
+        css = {
+            'all': ('admin/css/custom-admin.css',)
+        }
