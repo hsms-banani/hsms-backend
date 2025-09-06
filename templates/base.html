@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load static %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
@@ -779,5 +780,30 @@
     </script>
 
     {% block extra_js %}{% endblock %}
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static i18n %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ config.name }}{% endblock %}</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {{ config.analytics_code|safe }}
+</head>
+<body class="bg-gray-50">
+    {% include 'core/includes/header.html' %}
+    
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'core/includes/footer.html' %}
+    
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 </body>
 </html>

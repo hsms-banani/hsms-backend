@@ -1,0 +1,31 @@
+<nav class="bg-blue-800 text-white shadow-lg">
+    <div class="container mx-auto px-4">
+        <div class="hidden md:flex items-center justify-between">
+            <div class="flex space-x-4 py-3">
+                <a href="{% url 'core:home' %}" class="px-4 py-2 hover:bg-blue-700">Home</a>
+                <a href="{% url 'about:mission_vision' %}" class="px-4 py-2 hover:bg-blue-700">About HSMS</a>
+                <div class="relative group">
+                    <button class="px-4 py-2 hover:bg-blue-700 flex items-center">
+                        Academics <i class="material-icons ml-1">arrow_drop_down</i>
+                    </button>
+                    <div class="absolute hidden group-hover:block bg-white shadow-lg mt-1">
+                        <a href="{% url 'academics:department_list' %}" class="block px-4 py-2 text-gray-800 hover:bg-blue-50">Departments</a>
+                        <a href="{% url 'academics:course_catalog' %}" class="block px-4 py-2 text-gray-800 hover:bg-blue-50">Courses</a>
+                    </div>
+                </div>
+                <!-- Add more navigation items -->
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="p-2 hover:bg-blue-700 focus:outline-none">
+                <i class="material-icons">menu</i>
+            </button>
+            <div id="mobile-menu" class="hidden absolute w-full bg-blue-800">
+                <a href="{% url 'core:home' %}" class="block px-4 py-2 hover:bg-blue-700">Home</a>
+                <!-- Add mobile menu items -->
+            </div>
+        </div>
+    </div>
+</nav>

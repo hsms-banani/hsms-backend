@@ -1,0 +1,85 @@
+{% load i18n %}
+<footer class="bg-blue-900 text-white">
+    <div class="container mx-auto py-8 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- School Info -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">{{ config.name }}</h3>
+                <p class="text-blue-200 italic mb-4">{{ config.motto }}</p>
+                <div class="flex items-center mb-2">
+                    <i class="material-icons mr-2">location_on</i>
+                    <span>{{ config.address }}</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <i class="material-icons mr-2">phone</i>
+                    <span>{{ config.main_phone }}</span>
+                </div>
+                <div class="flex items-center mb-2">
+                    <i class="material-icons mr-2">email</i>
+                    <span>{{ config.email }}</span>
+                </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">{% trans "Quick Links" %}</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'core:home' %}" class="hover:text-blue-300">{% trans "Home" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "About Us" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Academics" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Admissions" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Contact" %}</a></li>
+                </ul>
+            </div>
+            
+            <!-- Portals -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">{% trans "Portals" %}</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Student Login" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Teacher Login" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Parent Portal" %}</a></li>
+                    <li><a href="#" class="hover:text-blue-300">{% trans "Alumni" %}</a></li>
+                </ul>
+            </div>
+            
+            <!-- Social and Map -->
+            <div>
+                <h3 class="text-xl font-bold mb-4">{% trans "Connect With Us" %}</h3>
+                <div class="flex space-x-4 mb-6">
+                    {% if config.facebook_url %}
+                    <a href="{{ config.facebook_url }}" target="_blank" class="text-white hover:text-blue-300" aria-label="Facebook">
+                        <i class="material-icons">facebook</i>
+                    </a>
+                    {% endif %}
+                    
+                    {% if config.twitter_url %}
+                    <a href="{{ config.twitter_url }}" target="_blank" class="text-white hover:text-blue-300" aria-label="Twitter">
+                        <i class="material-icons">twitter</i>
+                    </a>
+                    {% endif %}
+                    
+                    {% if config.youtube_url %}
+                    <a href="{{ config.youtube_url }}" target="_blank" class="text-white hover:text-blue-300" aria-label="YouTube">
+                        <i class="material-icons">video_library</i>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                {% if config.google_maps_embed %}
+                <div class="mt-4">
+                    {{ config.google_maps_embed|safe }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Copyright Section -->
+    <div class="bg-blue-950 py-4">
+        <div class="container mx-auto px-4 text-center text-blue-200">
+            <p>&copy; {% now "Y" %} {{ config.name }}. {% trans "All Rights Reserved" %}.</p>
+            <p class="text-sm mt-2">{% trans "Developed by" %} <a href="#" class="hover:text-white">HSMS Web Team</a></p>
+        </div>
+    </div>
+</footer>

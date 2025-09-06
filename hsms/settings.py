@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+<<<<<<< HEAD
 
 import os
 from pathlib import Path
@@ -17,12 +18,24 @@ from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+=======
+import sys
+import os
+from pathlib import Path
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+
+BASE_URL = os.getenv('DJANGO_BASE_URL', 'http://localhost:8000')
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+<<<<<<< HEAD
 SECRET_KEY = 'django-insecure-1jbm$@xlw)6lfr_&3qlb*(wp0eu7vvi6cyw4y4^rus%#s3sevm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -33,12 +46,26 @@ ALLOWED_HOSTS = []
 
 # Application definition
 DJANGO_APPS = [
+=======
+SECRET_KEY = 'django-insecure-^%%8=ek8a5k$u_@=ime%87a+#m#$=*5_%37algc&gsbjckb0h1'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
+ALLOWED_HOSTS = ['hsms-banani.org', 'www.hsms-banani.org', 'localhost', '127.0.0.1']
+
+
+# Application definition
+
+INSTALLED_APPS = [
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+<<<<<<< HEAD
     'django.contrib.sitemaps',
     'django.contrib.humanize',
 ]
@@ -71,6 +98,80 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+=======
+    
+    'apps.home.apps.HomeConfig',
+    'apps.about.apps.AboutConfig',
+    'apps.seminary.apps.SeminaryConfig',
+    'apps.academics.apps.AcademicsConfig',
+    'apps.offices.apps.OfficesConfig',
+    'apps.publications.apps.PublicationsConfig',
+    'apps.students.apps.StudentsConfig',
+    'apps.events.apps.EventsConfig',
+    'apps.contact.apps.ContactConfig',
+    'apps.announcements.apps.AnnouncementsConfig',
+    'apps.hero.apps.HeroConfig',
+    'apps.news.apps.NewsConfig',
+    'django_summernote',
+    'rest_framework',
+    'corsheaders',  
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'hsms.middleware.CacheControlMiddleware', 
+    'hsms.middleware.PDFFrameMiddleware', 
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Your Next.js development server
+    "http://127.0.0.1:3000",
+    "https://hsms-banani.org",  # Add your production domain
+    "https://www.hsms-banani.org",
+]
+
+
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOW_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
+        'cache-control',
+        'pragma',
+    ]
+    # Disable caching for API responses in development
+    CORS_PREFLIGHT_MAX_AGE = 0
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOW_CREDENTIALS = True
+
+# REST Framework configuration
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Change this for production
+    ],
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 ROOT_URLCONF = 'hsms.urls'
 
 TEMPLATES = [
@@ -84,6 +185,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+<<<<<<< HEAD
                 # Seminary context processors
                 'seminary.context_processors.site_settings',
                 'seminary.context_processors.global_announcements',
@@ -91,11 +193,14 @@ TEMPLATES = [
                 'seminary.context_processors.breadcrumb_helper',
                 # Library context processor
                 'library.context_processors.library_stats',  # Add this line
+=======
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
             ],
         },
     },
 ]
 
+<<<<<<< HEAD
 WSGI_APPLICATION = 'hsms.wsgi.application'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -133,6 +238,47 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+=======
+
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Media files (Uploaded files)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Site URL for media file serving
+SITE_URL = 'https://hsms-banani.org'
+
+# File upload settings
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024  # 10MB
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024   # 10MB
+
+# Security settings for file downloads
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+  
+
+# Optional: Restrict file types for security
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.MemoryFileUploadHandler',
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
+
+WSGI_APPLICATION = 'hsms.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'hsmsdb.sqlite3',
+    }
+}
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 
 
 # Password validation
@@ -158,6 +304,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
+<<<<<<< HEAD
 TIME_ZONE = 'Asia/Dhaka'
 USE_I18N = False
 USE_TZ = True
@@ -212,22 +359,37 @@ TINYMCE_DEFAULT_CONFIG = {
         'alignjustify': {'selector': 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', 'classes': 'text-justify'}
     }
 }
+=======
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_TZ = True
+
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+<<<<<<< HEAD
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+=======
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+<<<<<<< HEAD
 # Email configuration
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
@@ -328,3 +490,260 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warning',
     messages.ERROR: 'danger',
 }
+=======
+# Summernote configuration
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode, default
+    'iframe': True,
+    
+    # You can put custom Summernote settings
+    'summernote': {
+        # Air-mode settings
+        'airMode': False,
+        
+        # Change editor size
+        'width': '100%',
+        'height': '480',
+        
+        # Use proper language setting automatically (default)
+        'lang': None,
+        
+        # Enhanced toolbar with cleaning options
+        'toolbar': [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video']],
+            ['view', ['fullscreen', 'codeview', 'help']],
+            # Add cleaning buttons
+            ['misc', ['undo', 'redo']],
+        ],
+        
+        # Enhanced font settings
+        'fontNames': [
+            'Arial', 'Arial Black', 'Comic Sans MS', 'Courier New',
+            'Helvetica Neue', 'Helvetica', 'Impact', 'Lucida Grande',
+            'Tahoma', 'Times New Roman', 'Verdana', 'Georgia', 'Trebuchet MS'
+        ],
+        
+        # Font sizes
+        'fontSizes': ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '30', '36', '50', '72'],
+        
+        # Custom colors (simplified palette)
+        'colors': [
+            ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F3F7', '#FFFFFF'],
+            ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],
+            ['#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE'],
+            ['#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD'],
+        ],
+        
+        # CONTENT CLEANING SETTINGS - Key for solving your problem
+        'cleaner': {
+            # Remove Microsoft Word formatting
+            'notTime': 2400,  # Time to show note about paste cleaning
+            'action': 'both',  # 'button', 'paste', 'both'
+            'newline': '<br>',  # Use <br> instead of <p> for newlines
+            'notStyle': 'position:absolute;top:0;left:-10000px;width:1px;height:1px;',
+            'icon': '<i class="note-icon-magic"></i>',
+            'keepHtml': False,  # Remove all HTML formatting when cleaning
+            'keepOnlyTags': ['<p>', '<br>', '<ul>', '<li>', '<ol>', '<b>', '<strong>', '<i>', '<em>', '<u>', '<a>'],  # Only keep these tags
+            'keepClasses': False,  # Remove all CSS classes
+            'badTags': ['style', 'script', 'applet', 'embed', 'noframes', 'noscript'],  # Remove these tags completely
+            'badAttributes': ['style', 'start']  # Remove these attributes
+        },
+        
+        # Paste settings to clean content automatically
+        'callbacks': {
+            'onPaste': '''
+                function(e) {
+                    var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+                    e.preventDefault();
+                    
+                    // Clean the pasted content
+                    var cleanText = bufferText
+                        .replace(/<!--[\s\S]*?-->/g, '')  // Remove HTML comments
+                        .replace(/<style[\s\S]*?<\/style>/gi, '')  // Remove style tags
+                        .replace(/<script[\s\S]*?<\/script>/gi, '')  // Remove script tags
+                        .replace(/style\s*=\s*"[^"]*"/gi, '')  // Remove inline styles
+                        .replace(/class\s*=\s*"[^"]*"/gi, '')  // Remove CSS classes
+                        .replace(/mso-[^;:]*:[^;]*(;|$)/gi, '')  // Remove Microsoft Office styles
+                        .replace(/\s+/g, ' ')  // Normalize whitespace
+                        .trim();
+                    
+                    // Insert cleaned text
+                    document.execCommand('insertHTML', false, cleanText);
+                }
+            '''
+        },
+        
+        # Additional paste options
+        'dialogsInBody': True,
+        'disableDragAndDrop': False,
+        'shortcuts': True,
+        'tabsize': 2,
+        'styleTags': ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+        
+        # Popover settings
+        'popover': {
+            'image': [
+                ['image', ['resizeFull', 'resizeHalf', 'resizeQuarter', 'resizeNone']],
+                ['float', ['floatLeft', 'floatRight', 'floatNone']],
+                ['remove', ['removeMedia']],
+            ],
+            'link': [['link', ['linkDialogShow', 'unlink']]],
+            'table': [
+                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+            ],
+            'air': [
+                ['color', ['color']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['para', ['ul', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+            ],
+        },
+    },
+    
+    # File upload settings
+    'attachment_upload_to': 'summernote_attachments/',
+    'attachment_storage_class': 'django.core.files.storage.FileSystemStorage',
+    'attachment_model': 'django_summernote.Attachment',
+    'attachment_filesize_limit': 1024 * 1024 * 10,  # 10MB
+    'disable_attachment': False,
+    'attachment_absolute_uri': False,
+    
+    # Custom CSS/JS for enhanced functionality
+    'css': (
+        '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css',
+        # Add custom CSS for content cleaning
+        '/static/css/summernote-custom.css',
+    ),
+    
+    'js': (
+        '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',
+        # Add Summernote cleaner plugin
+        '//cdn.jsdelivr.net/npm/summernote@0.8.20/dist/plugin/summernote-cleaner/summernote-cleaner.min.js',
+    ),
+    
+    'css_for_inplace': (
+        '//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css',
+        '/static/css/summernote-custom.css',
+    ),
+    
+    'js_for_inplace': (
+        '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js',
+        '//cdn.jsdelivr.net/npm/summernote@0.8.20/dist/plugin/summernote-cleaner/summernote-cleaner.min.js',
+    ),
+    
+    # Codemirror as codeview
+    'codemirror': {
+        'mode': 'htmlmixed',
+        'lineNumbers': True,
+        'theme': 'monokai',
+    },
+    
+    # Lazy initialization
+    'lazy': True,
+    
+    # Test mode
+    'test_func_name': 'test',
+}
+
+# Add this setting to handle HTML purification
+SUMMERNOTE_THEME = 'bs4'  # Use Bootstrap 4 theme
+
+# Optional: Add HTML sanitization
+try:
+    import bleach
+    SUMMERNOTE_BLEACH = {
+        'allowed_tags': [
+            'p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+            'ul', 'ol', 'li', 'blockquote', 'a', 'img', 'table', 'thead', 'tbody',
+            'tr', 'th', 'td', 'div', 'span'
+        ],
+        'allowed_attributes': {
+            'a': ['href', 'title'],
+            'img': ['src', 'alt', 'title', 'width', 'height'],
+            'table': ['class'],
+            'th': ['scope'],
+            'td': ['colspan', 'rowspan'],
+        },
+        'allowed_protocols': ['http', 'https', 'mailto'],
+        'strip_tags': True,
+        'strip_comments': True,
+    }
+except ImportError:
+    # bleach is not installed
+    pass
+
+
+USE_I18N = True
+LANGUAGES = [
+    ('en', 'English'),
+    ('bn', 'Bengali'),
+    # Add other languages as needed
+]
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+# CSRF Settings
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+    "https://hsms-banani.org",
+    "https://www.hsms-banani.org",
+]
+
+# For debugging API responses in development
+if DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'INFO',
+            },
+            'apps.hero': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # For production
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # For development
+EMAIL_HOST = 'your-smtp-host.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@domain.com'
+EMAIL_HOST_PASSWORD = 'your-email-password'
+DEFAULT_FROM_EMAIL = 'noreply@yourdomain.com'
+ADMIN_EMAIL = 'admin@yourdomain.com'
+>>>>>>> 1ec4ac0a13ca208754d746c157c9fc6d929e54f6
