@@ -1,0 +1,61 @@
+<!-- partials/book_grid.html -->
+{% load static library_extras humanize %}
+
+<div class="flex items-center justify-between mb-6">
+    <p class="text-sm text-gray-600">Showing <span class="font-semibold">{{ page_obj.start_index }}-{{ page_obj.end_index }}</span> of <span class="font-semibold">{{ page_obj.paginator.count|intcomma }}</span> results</p>
+</div>
+
+<div class="book-grid mb-8">
+    {% for book in page_obj %}
+        {% include "library/partials/book_card.html" %}
+    {% empty %}
+        <div class="col-span-full text-center py-16">
+            <i class="fas fa-search text-5xl text-gray-300 mb-4"></i>
+            <h3 class="text-2xl font-medium text-gray-800 mb-2">No Books Found</h3>
+            <p class="text-gray-600">Your search or filter criteria did not match any books.</p>
+            <a href="{% url 'library:home' %}" class="mt-6 inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Clear Filters</a>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<nav class="flex items-center justify-center space-x-2">
+    {% if page_obj.has_previous %}
+        <a href="{% update_query_param request.get_full_path 'page' page_obj.previous_page_number %}" 
+           class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" 
+           hx-get="{% update_query_param request.get_full_path 'page' page_obj.previous_page_number %}" 
+           hx-target="#book-grid-container" 
+           hx-indicator="#book-grid-loader"
+           hx-push-url="true">
+            &laquo; Previous
+        </a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="px-4 py-2 text-sm bg-blue-600 text-white rounded-md">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="{% update_query_param request.get_full_path 'page' num %}" 
+               class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" 
+               hx-get="{% update_query_param request.get_full_path 'page' num %}" 
+               hx-target="#book-grid-container" 
+               hx-indicator="#book-grid-loader"
+               hx-push-url="true">
+                {{ num }}
+            </a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a href="{% update_query_param request.get_full_path 'page' page_obj.next_page_number %}" 
+           class="px-4 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50" 
+           hx-get="{% update_query_param request.get_full_path 'page' page_obj.next_page_number %}" 
+           hx-target="#book-grid-container" 
+           hx-indicator="#book-grid-loader"
+           hx-push-url="true">
+            Next &raquo;
+        </a>
+    {% endif %}
+</nav>
+{% endif %}

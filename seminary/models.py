@@ -10,6 +10,7 @@ class SiteSettings(models.Model):
     site_name = models.CharField(max_length=200, default="Holy Spirit Major Seminary")
     site_motto = models.CharField(max_length=200, default="Dedicated for Service")
     site_logo = models.ImageField(upload_to='site/', blank=True, null=True)
+    hsit_logo = models.ImageField(upload_to='logos/', blank=True, null=True)
     address = HTMLField(help_text="Use rich text formatting for address")  # Rich text
     phone = models.CharField(max_length=20)
     email = models.EmailField()
@@ -513,3 +514,43 @@ class LeadershipMessage(models.Model):
         elif self.message_type == 'spiritual_director' and not self.title:
             self.title = "Spiritual Director's Message"
         super().save(*args, **kwargs)
+
+class Student(models.Model):
+    STUDENT_TYPE_CHOICES = (
+        ('current', 'Current Student'),
+        ('past', 'Past Student'),
+    )
+    COURSE_CHOICES = (
+        ('diploma', 'Diploma'),
+        ('full_course', 'Full Course'),
+        ('philosophy', 'Philosophy'),
+        ('theology', 'Theology'),
+    )
+    BELONGS_TO_CHOICES = (
+        ('diocese', 'Diocese'),
+        ('congregation', 'Congregation'),
+    )
+    
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    student_type = models.CharField(max_length=10, choices=STUDENT_TYPE_CHOICES, default='current')
+    year = models.PositiveIntegerField()
+    course = models.CharField(max_length=20, choices=COURSE_CHOICES)
+    belongs_to = models.CharField(max_length=20, choices=BELONGS_TO_CHOICES, blank=True, null=True, verbose_name="Belongs to")
+    diocese_congregation = models.CharField(max_length=100, blank=True, null=True, verbose_name="Diocese/Congregation")
+    photo = models.ImageField(upload_to='students/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    
+    class Meta:
+        ordering = ['-year', 'name']
+    
+    def __str__(self):
+        return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('student_detail', kwargs={'slug': self.slug})

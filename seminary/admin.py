@@ -1,7 +1,7 @@
 # seminary/admin.py - Updated with TinyMCE
 from django.contrib import admin
 from django.utils.html import format_html
-from django.urls import reverse
+from django.urls import path, reverse
 from django.utils.safestring import mark_safe
 from tinymce.widgets import TinyMCE
 from django import forms
@@ -66,7 +66,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = ('site_name', 'site_motto', 'email', 'phone')
     fieldsets = (
         ('Basic Information', {
-            'fields': ('site_name', 'site_motto', 'site_logo')
+            'fields': ('site_name', 'site_motto', 'site_logo', 'hsit_logo')
         }),
         ('Contact Information', {
             'fields': ('address', 'phone', 'email')
@@ -445,10 +445,7 @@ class DepartmentAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     search_fields = ('name',)
 
-# Customize admin site headers
-admin.site.site_header = "Holy Spirit Major Seminary Administration"
-admin.site.site_title = "HSMS Admin"
-admin.site.index_title = "Welcome to HSMS Administration"
+
 
 # Add custom CSS for better TinyMCE integration in admin
 class Media:
@@ -516,3 +513,80 @@ class SeminaryAdministrationAdmin(admin.ModelAdmin):
         if obj:  # editing an existing object
             return ['created_at', 'updated_at']
         return []
+
+class CsvImportForm(forms.Form):
+    csv_file = forms.FileField()
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'student_type', 'year', 'course', 'belongs_to', 'diocese_congregation', 'is_active')
+    list_filter = ('student_type', 'year', 'course', 'belongs_to', 'is_active')
+    search_fields = ('name', 'diocese_congregation')
+    prepopulated_fields = {'slug': ('name',)}
+    change_list_template = "admin/seminary/student/change_list.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('upload-csv/', self.upload_csv),
+            path('download-sample-csv/', self.download_sample_csv),
+        ]
+        return my_urls + urls
+
+    def download_sample_csv(self, request):
+        import csv
+        from django.http import HttpResponse
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="sample_students.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['name', 'student_type', 'year', 'course', 'Belongs to', 'Diocese/Congregation', 'photo', 'is_active'])
+        writer.writerow(['John Doe', 'current', '2023', 'theology', 'diocese', 'Dhaka', 'students/john_doe.jpg', 'True'])
+
+        return response
+
+    def upload_csv(self, request):
+        import csv
+        from django.shortcuts import render, redirect
+
+        if request.method == "POST":
+            form = CsvImportForm(request.POST, request.FILES)
+            if form.is_valid():
+                csv_file = request.FILES["csv_file"].read().decode('utf-8').splitlines()
+                csv_reader = csv.reader(csv_file)
+                header = next(csv_reader)
+                # Map CSV headers to model fields
+                header_map = {
+                    'Belongs to': 'belongs_to',
+                    'Diocese/Congregation': 'diocese_congregation'
+                }
+                cleaned_header = [header_map.get(h.strip(), h.strip().replace('*', '')) for h in header]
+
+                for row in csv_reader:
+                    data = dict(zip(cleaned_header, row))
+
+                    student, created = Student.objects.update_or_create(
+                        name=data.get('name'),
+                        defaults={
+                            'student_type': data.get('student_type'),
+                            'year': data.get('year'),
+                            'course': data.get('course'),
+                            'belongs_to': data.get('belongs_to'),
+                            'diocese_congregation': data.get('diocese_congregation'),
+                            'photo': data.get('photo'),
+                            'is_active': data.get('is_active') == 'True'
+                        }
+                    )
+
+                self.message_user(request, "Your csv file has been imported")
+                return redirect("..")
+        form = CsvImportForm()
+        context = {
+            "form": form,
+            "opts": self.model._meta,
+            "app_label": self.model._meta.app_label,
+        }
+        return render(
+            request, "admin/seminary/student/upload_csv.html", context
+        )

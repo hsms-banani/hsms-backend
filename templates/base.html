@@ -44,6 +44,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Custom Loader -->
+    <link rel="stylesheet" href="{% static 'css/loader.css' %}">
+
+    <!-- Print Styles -->
+    <link rel="stylesheet" href="{% static 'css/print.css' %}" media="print">
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     
@@ -452,10 +458,17 @@
                             <a href="{% url 'philosophy_department' %}">Department of Philosophy</a>
                             <a href="{% url 'theology_department' %}">Department of Theology</a>
                             <a href="{% url 'faculty_list' %}">Faculty</a>
+                            <a href="{% url 'student_list' %}">Students</a>
                             <a href="{% url 'academic_calendar' %}">Academic Calendar</a>
-                            <a href="{% url 'library' %}">Library</a>
-                        </div>
-                    </li>
+                    </div>
+                </li>
+
+                <!-- Library-->
+                <li class="relative dropdown" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+                    <a href="{% url 'library:home' %}" class="nav-link flex items-center">
+                        Library 
+                    </a>
+                </li>
                     
                     <li><a href="{% url 'publications' %}" class="nav-link">Publications</a></li>
                     
@@ -502,6 +515,7 @@
                                 <a href="{% url 'seminary_history' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">History</a>
                                 <a href="{% url 'formation_program' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Formation Program</a>
                                 <a href="{% url 'rules_regulations' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Rules & Regulations</a>
+                                <a href="{% url 'seminary_administration' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Seminary Administration</a>
                                 <a href="{% url 'committees' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Committees</a>
                             </div>
                         </div>
@@ -531,9 +545,11 @@
                                 <a href="{% url 'theology_department' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Department of Theology</a>
                                 <a href="{% url 'faculty_list' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Faculty</a>
                                 <a href="{% url 'academic_calendar' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Academic Calendar</a>
-                                <a href="{% url 'library' %}" class="block px-4 py-2 text-sm hover:bg-gray-700 rounded transition-colors text-gray-300">Library</a>
                             </div>
                         </div>
+
+                        <!-- Library -->
+                        <a href="{% url 'library:home' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Library</a>
                         
                         <!-- Publications -->
                         <a href="{% url 'publications' %}" class="block px-4 py-2 hover:bg-gray-700 rounded transition-colors text-white">Publications</a>

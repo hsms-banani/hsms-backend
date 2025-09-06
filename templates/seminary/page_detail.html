@@ -6,8 +6,6 @@
 {% block meta_description %}{{ page.meta_description|default:page.content|striptags|truncatewords:20 }}{% endblock %}
 
 {% block extra_css %}
-<!-- Consistent Styles CSS -->
-<link rel="stylesheet" href="{% static 'css/consistent-styles.css' %}">
 
 <!-- Rich text content styling - scoped to content area only -->
 <style>

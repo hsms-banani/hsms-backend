@@ -1,0 +1,96 @@
+<!-- templates/library/partials/quick_search_results.html - ENHANCED VERSION -->
+{% load search_tags %}
+
+{% if results %}
+<div class="search-suggestions">
+    <div class="p-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+        <h3 class="text-sm font-semibold text-gray-700">
+            Quick Results for "{{ query }}"
+        </h3>
+    </div>
+    
+    {% for book in results %}
+    <a href="{{ book.get_absolute_url }}" class="suggestion-item block p-4 hover:bg-gray-100 transition-colors duration-150 ease-in-out border-b border-gray-100 last:border-b-0" onclick="document.getElementById('quick-search-results').classList.add('hidden');">
+        <div class="flex items-center space-x-4">
+            <div class="flex-shrink-0">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="w-10 h-14 object-cover rounded-md shadow-sm">
+                {% else %}
+                    <div class="w-10 h-14 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md flex items-center justify-center shadow-sm">
+                        <i class="fas fa-book text-gray-500"></i>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="flex-grow min-w-0">
+                <!-- Title with highlighting -->
+                <h4 class="font-semibold text-gray-800 text-md truncate">
+                    {{ book.title|highlight:query|safe }}
+                    {% if book.subtitle %}
+                        <span class="text-gray-600">: {{ book.subtitle|highlight:query|safe }}</span>
+                    {% endif %}
+                </h4>
+                
+                <!-- Authors with highlighting -->
+                <p class="text-sm text-gray-500 truncate">
+                    by {{ book.authors_list|highlight:query|safe }}
+                </p>
+                
+                <!-- Category and Publication Year -->
+                <p class="text-xs text-gray-400 mt-1">
+                    {{ book.category.name }} • {{ book.publication_year }}
+                </p>
+                
+                <div class="flex items-center justify-between mt-2">
+                    <span class="text-xs px-2 py-1 rounded-full
+                        {% if book.is_available %}
+                            bg-green-100 text-green-800
+                        {% else %}
+                            bg-red-100 text-red-800
+                        {% endif %}
+                    ">
+                        {% if book.is_available %}
+                            Available ({{ book.copies_available }}/{{ book.total_copies }})
+                        {% else %}
+                            {{ book.get_status_display }}
+                        {% endif %}
+                    </span>
+                    <div class="text-right">
+                        <p class="text-xs font-semibold text-gray-700">{{ book.call_number|highlight:query|safe }}</p>
+                        {% if book.location_shelf %}
+                            <p class="text-xs text-gray-500">{{ book.location_shelf }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    
+    <div class="p-3 bg-gray-50 border-t border-gray-200 rounded-b-lg">
+        <a href="{% url 'library:home' %}?q={{ query }}" 
+           class="block text-center text-sm text-blue-600 hover:text-blue-800 font-semibold py-2 rounded-lg hover:bg-blue-50 transition-colors"
+           onclick="document.getElementById('quick-search-results').classList.add('hidden');">
+            View All Results for "{{ query }}"
+        </a>
+    </div>
+</div>
+{% elif query and query|length > 1 %}
+<div class="p-6 text-center text-gray-500">
+    <i class="fas fa-search text-4xl text-gray-300 mb-4"></i>
+    <h4 class="font-semibold text-lg text-gray-700">No Results Found</h4>
+    <p class="text-sm">We couldn't find any books matching "{{ query }}".</p>
+    <div class="mt-4 space-x-4">
+        <a href="{% url 'library:home' %}?q={{ query }}" 
+           class="text-blue-600 hover:text-blue-800 text-sm font-medium"
+           onclick="document.getElementById('quick-search-results').classList.add('hidden');">
+            Advanced Search
+        </a>
+        <button type="button" 
+                class="text-gray-600 hover:text-gray-800 text-sm font-medium"
+                onclick="document.getElementById('quick-search-input').value=''; document.getElementById('quick-search-results').classList.add('hidden');">
+            Clear Search
+        </button>
+    </div>
+</div>
+{% endif %}

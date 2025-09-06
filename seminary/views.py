@@ -43,7 +43,7 @@ def home(request):
     }
     return render(request, 'seminary/home.html', context)
 
-# Seminary Information Views
+#Seminary Information Views
 def about_seminary(request):
     """About seminary section with enhanced context"""
     
@@ -244,6 +244,9 @@ def local_church_history(request):
 # HSIT Views
 def hsit_about(request):
     """HSIT About page"""
+    # Get site settings for logo and other global settings
+    site_settings = SiteSettings.objects.first()
+    
     context = {
         'page_title': 'About HSIT',
         'director_message': Page.objects.filter(slug='director-message', is_published=True).first(),
@@ -253,6 +256,10 @@ def hsit_about(request):
         'philosophy_faculty': Faculty.objects.filter(is_active=True, departments__slug='philosophy').order_by('order'),
         'theology_faculty': Faculty.objects.filter(is_active=True, departments__slug='theology').order_by('order'),
         'administration': Faculty.objects.filter(is_active=True, departments__slug='administration').order_by('order'),
+        # Add site settings and logo with proper null checking
+        'site_settings': site_settings,
+        # Only pass logo if it exists and has a file
+        'hsit_logo': site_settings.hsit_logo if (site_settings and site_settings.hsit_logo and site_settings.hsit_logo.name) else None,
     }
     return render(request, 'seminary/hsit_about.html', context)
 
@@ -1554,3 +1561,59 @@ def administration_filter(request):
     }
     
     return render(request, 'seminary/partials/administration_list.html', context)
+
+def student_list(request):
+    students = Student.objects.filter(is_active=True)
+    
+    # Filtering
+    student_type = request.GET.get('student_type')
+    if student_type:
+        students = students.filter(student_type=student_type)
+        
+    year = request.GET.get('year')
+    if year:
+        students = students.filter(year=year)
+        
+    course = request.GET.get('course')
+    if course:
+        students = students.filter(course=course)
+        
+    belongs_to = request.GET.get('belongs_to')
+    if belongs_to:
+        students = students.filter(belongs_to=belongs_to)
+        
+    diocese_congregation = request.GET.get('diocese_congregation')
+    if diocese_congregation:
+        students = students.filter(diocese_congregation=diocese_congregation)
+        
+    # Searching
+    query = request.GET.get('q')
+    if query:
+        students = students.filter(name__icontains=query)
+        
+    # Sorting
+    sort = request.GET.get('sort')
+    if sort == 'a-z':
+        students = students.order_by('name')
+    elif sort == 'z-a':
+        students = students.order_by('-name')
+        
+    paginator = Paginator(students, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    diocese_congregations = Student.objects.values_list('diocese_congregation', flat=True).distinct().order_by('diocese_congregation')
+
+    context = {
+        'students': page_obj,
+        'student_types': Student.STUDENT_TYPE_CHOICES,
+        'courses': Student.COURSE_CHOICES,
+        'belongs_to_choices': Student.BELONGS_TO_CHOICES,
+        'diocese_congregations': diocese_congregations,
+        'years': Student.objects.values_list('year', flat=True).distinct().order_by('-year'),
+    }
+    
+    if request.htmx:
+        return render(request, 'seminary/partials/_student_list.html', context)
+    
+    return render(request, 'seminary/student_list.html', context)

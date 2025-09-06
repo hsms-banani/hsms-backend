@@ -1,0 +1,3 @@
+name,student_type,year,course,Belongs to,Diocese/Congregation,photo,is_active
+"John Doe","current",2023,"theology","diocese","Dhaka","students/john_doe.jpg","True"
+"Jane Smith","past",2022,"philosophy","congregation","Holy Cross","students/jane_smith.jpg","True"

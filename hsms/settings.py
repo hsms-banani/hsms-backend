@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from decouple import config
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -50,6 +51,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'seminary',
+    'library',
+    'dashboard',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -86,6 +89,8 @@ TEMPLATES = [
                 'seminary.context_processors.global_announcements',
                 'seminary.context_processors.navigation_pages',
                 'seminary.context_processors.breadcrumb_helper',
+                # Library context processor
+                'library.context_processors.library_stats',  # Add this line
             ],
         },
     },
@@ -108,12 +113,26 @@ CACHES = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if config('DJANGO_ENV', default='development') == 'production':
+    # Production database configuration (PostgreSQL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DB_NAME'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'HOST': config('DB_HOST', default='localhost'),
+            'PORT': config('DB_PORT', default='5432'),
+        }
     }
-}
+else:
+    # Development database configuration (SQLite)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation

@@ -6,8 +6,6 @@
 {% block meta_description %}{{ leadership_message.meta_description|default:leadership_message.message_content|striptags|truncatewords:20 }}{% endblock %}
 
 {% block extra_css %}
-<!-- Consistent Styles CSS -->
-<link rel="stylesheet" href="{% static 'css/consistent-styles.css' %}">
 
 <style>
 /* Leadership Message Specific Styles */

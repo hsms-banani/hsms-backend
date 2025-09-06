@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto py-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="md:col-span-1">
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <h2 class="text-xl font-bold mb-4">Filters</h2>
+                <form hx-get="." hx-target="#student-list" hx-swap="innerHTML">
+                    <div class="space-y-4">
+                        <div>
+                            <label for="student_type" class="block text-sm font-medium text-gray-700">Student Type</label>
+                            <select name="student_type" id="student_type" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">All</option>
+                                {% for value, name in student_types %}
+                                    <option value="{{ value }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="year" class="block text-sm font-medium text-gray-700">Year</label>
+                            <select name="year" id="year" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">All</option>
+                                {% for year in years %}
+                                    <option value="{{ year }}">{{ year }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="course" class="block text-sm font-medium text-gray-700">Course</label>
+                            <select name="course" id="course" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">All</option>
+                                {% for value, name in courses %}
+                                    <option value="{{ value }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="belongs_to" class="block text-sm font-medium text-gray-700">Belongs to</label>
+                            <select name="belongs_to" id="belongs_to" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">All</option>
+                                {% for value, name in belongs_to_choices %}
+                                    <option value="{{ value }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="diocese_congregation" class="block text-sm font-medium text-gray-700">Diocese/Congregation</label>
+                            <select name="diocese_congregation" id="diocese_congregation" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">All</option>
+                                {% for item in diocese_congregations %}
+                                    <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="sort" class="block text-sm font-medium text-gray-700">Sort by</label>
+                            <select name="sort" id="sort" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option value="">Default</option>
+                                <option value="a-z">A-Z</option>
+                                <option value="z-a">Z-A</option>
+                            </select>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full bg-blue-500 text-white rounded-md p-2">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="md:col-span-3">
+            <div class="mb-4">
+                <form hx-get="." hx-target="#student-list" hx-swap="innerHTML" class="flex justify-center">
+                    <input type="text" name="q" placeholder="Search by name" class="w-1/2 border border-gray-300 rounded-md p-2">
+                    <button type="submit" class="ml-2 bg-blue-500 text-white rounded-md p-2">Search</button>
+                </form>
+            </div>
+            <div id="student-list">
+                {% include 'seminary/partials/_student_list.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

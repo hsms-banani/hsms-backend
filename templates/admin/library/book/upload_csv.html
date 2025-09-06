@@ -1,0 +1,45 @@
+
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block content %}
+<div>
+    <h1>Upload CSV</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="csv_file">
+        <button type="submit">Upload</button>
+    </form>
+
+    <hr>
+
+    <h2>How to Prepare Your CSV Data</h2>
+    <p>Please make sure your CSV file has the following columns. Fields marked with an asterisk (*) are required.</p>
+    
+    <h3>Columns:</h3>
+    <ul>
+        <li><strong>title*</strong>: The main title of the book.</li>
+        <li><strong>subtitle</strong>: The subtitle, if any.</li>
+        <li><strong>author*</strong>: The name(s) of the author(s). For multiple authors, separate them with a semicolon (e.g., "Author One;Author Two").</li>
+        <li><strong>publisher*</strong>: The name of the publisher.</li>
+        <li><strong>publication_year*</strong>: The year the book was published (e.g., 2023).</li>
+        <li><strong>isbn_10</strong>: The 10-digit ISBN.</li>
+        <li><strong>isbn_13</strong>: The 13-digit ISBN.</li>
+        <li><strong>classification_number*</strong>: The Dewey Decimal Classification number (e.g., 230.1).</li>
+        <li><strong>cutter_number*</strong>: The Cutter number (e.g., S64i).</li>
+        <li><strong>category*</strong>: The category or subject of the book (e.g., Systematic Theology).</li>
+        <li><strong>language</strong>: The language code (e.g., en, bn, hi).</li>
+        <li><strong>pages</strong>: The number of pages.</li>
+        <li><strong>edition</strong>: The edition of the book (e.g., 3rd Edition).</li>
+        <li><strong>description</strong>: A brief description of the book.</li>
+        <li><strong>keywords</strong>: Comma-separated keywords.</li>
+        <li><strong>total_copies</strong>: The total number of copies.</li>
+        <li><strong>copies_available</strong>: The number of copies currently available.</li>
+        <li><strong>location_shelf</strong>: The physical location in the library (e.g., A-1-5).</li>
+        <li><strong>status</strong>: The availability status (e.g., available, checked_out).</li>
+    </ul>
+
+    <h3>Sample Row:</h3>
+    <pre>"Sample Book Title","A Sample Subtitle","Author One;Author Two","Sample Publisher",2023,"1234567890","9781234567890","230.1","S64i","Systematic Theology","en",450,"3rd Edition","A sample book description.","theology,christianity,doctrine",3,2,"A-1-5","available"</pre>
+</div>
+{% endblock %}
